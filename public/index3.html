@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Hệ Thống Ôn Tập Linux - 100 Câu Hỏi</title>
+    <title>Hệ Thống Ôn Tập Linux - 100 Câu Hỏi (Ngẫu Nhiên)</title>
     <style>
       :root {
         --primary: #2c3e50;
@@ -175,7 +175,9 @@
       <div id="question-grid"></div>
       <div style="padding: 15px; background: var(--dark); font-size: 0.75em">
         <button onclick="location.href = '/'">Về trang chủ</button>
-        <div style="display: flex; justify-content: space-around">
+        <div
+          style="display: flex; justify-content: space-around; margin-top: 10px"
+        >
           <span><span style="color: var(--success)">■</span> Đúng</span>
           <span><span style="color: var(--danger)">■</span> Sai</span>
           <span><span style="color: var(--warning)">■</span> Đang xem</span>
@@ -224,7 +226,7 @@
             style="background: var(--primary)"
             onclick="location.reload()"
           >
-            Làm lại từ đầu
+            Làm lại từ đầu (Đảo mới)
           </button>
         </div>
       </div>
@@ -1134,6 +1136,18 @@
       let score = 0;
       let userAnswers = new Array(questions.length).fill(null);
 
+      // --- TÍNH NĂNG MỚI: HÀM ĐẢO MẢNG ---
+      function shuffle(array) {
+        for (let i = array.length - 1; i > 0; i--) {
+          const j = Math.floor(Math.random() * (i + 1));
+          [array[i], array[j]] = [array[j], array[i]];
+        }
+        return array;
+      }
+
+      // Đảo câu hỏi ngay khi bắt đầu
+      shuffle(questions);
+
       function initGrid() {
         const grid = document.getElementById("question-grid");
         grid.innerHTML = "";
@@ -1151,6 +1165,7 @@
       function updateGridStyles() {
         questions.forEach((_, i) => {
           const el = document.getElementById(`grid-i-${i}`);
+          if (!el) return;
           el.classList.remove("current", "correct", "wrong");
           if (i === currentIdx) el.classList.add("current");
           if (userAnswers[i] === true) el.classList.add("correct");
@@ -1169,31 +1184,52 @@
         container.innerHTML = "";
         document.getElementById("next-btn").style.display = "none";
 
-        qData.o.forEach((opt, i) => {
+        // --- TÍNH NĂNG MỚI: ĐẢO ĐÁP ÁN ---
+        // Tạo mảng chứa thông tin đáp án để không làm mất gốc
+        let mappedOptions = qData.o.map((text, index) => ({
+          text: text,
+          isCorrect: index === qData.a,
+        }));
+
+        // Chỉ đảo đáp án nếu người dùng chưa trả lời câu này
+        if (userAnswers[currentIdx] === null) {
+          shuffle(mappedOptions);
+        }
+
+        mappedOptions.forEach((opt) => {
           const btn = document.createElement("button");
           btn.className = "option-btn";
-          btn.innerText = opt;
+          btn.innerText = opt.text;
 
+          // Nếu đã trả lời rồi (khi quay lại từ grid), hiển thị kết quả luôn
           if (userAnswers[currentIdx] !== null) {
-            if (i === qData.a) btn.classList.add("correct");
+            if (opt.isCorrect) btn.classList.add("correct");
+            // Nếu người dùng chọn sai ở lượt trước, chúng ta không lưu index cụ thể trong UI mới
+            // nên chỉ hiện đáp án đúng để học.
           } else {
-            btn.onclick = () => handleAnswer(i, btn);
+            btn.onclick = () => handleAnswer(opt.isCorrect, btn);
           }
           container.appendChild(btn);
         });
+
         updateGridStyles();
       }
 
-      function handleAnswer(selectedIdx, btn) {
-        const correctIdx = questions[currentIdx].a;
+      function handleAnswer(isCorrect, btn) {
         const allBtns = document.querySelectorAll(".option-btn");
 
-        if (selectedIdx === correctIdx) {
+        if (isCorrect) {
           btn.classList.add("correct");
           userAnswers[currentIdx] = true;
         } else {
           btn.classList.add("wrong");
-          allBtns[correctIdx].classList.add("correct");
+          // Tìm và highlight đáp án đúng
+          allBtns.forEach((b) => {
+            // Đây là cách đơn giản để tìm nút đúng trong DOM
+            // Chúng ta check lại logic từ mappedOptions lúc nãy
+          });
+          // Hiển thị đáp án đúng cho người dùng thấy
+          findCorrectBtn();
           userAnswers[currentIdx] = false;
         }
 
@@ -1202,6 +1238,16 @@
         allBtns.forEach((b) => (b.onclick = null));
         document.getElementById("next-btn").style.display = "block";
         updateGridStyles();
+      }
+
+      function findCorrectBtn() {
+        const qData = questions[currentIdx];
+        const allBtns = document.querySelectorAll(".option-btn");
+        allBtns.forEach((btn) => {
+          if (qData.o[qData.a] === btn.innerText) {
+            btn.classList.add("correct");
+          }
+        });
       }
 
       function jumpToQuestion(i) {
@@ -1224,7 +1270,7 @@
         document.getElementById("final-score").innerText = score;
 
         let rankMsg = "";
-        const ratio = score / 100;
+        const ratio = score / questions.length;
         if (ratio >= 0.9) rankMsg = "💎 Bạn là một chuyên gia Linux!";
         else if (ratio >= 0.7) rankMsg = "🌟 Kết quả rất tốt!";
         else if (ratio >= 0.5) rankMsg = "👍 Bạn đã đạt yêu cầu.";
@@ -1235,6 +1281,7 @@
       function retryWrongs() {
         const firstWrong = userAnswers.indexOf(false);
         if (firstWrong !== -1) {
+          // Reset những câu sai về null để làm lại
           userAnswers = userAnswers.map((v) => (v === false ? null : v));
           document.getElementById("quiz-screen").style.display = "block";
           document.getElementById("result-screen").style.display = "none";
@@ -1244,6 +1291,7 @@
         }
       }
 
+      // Khởi tạo lần đầu
       initGrid();
       loadQuestion();
     </script>

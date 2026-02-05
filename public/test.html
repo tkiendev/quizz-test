@@ -1,0 +1,425 @@
+<!doctype html>
+<html lang="vi">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Hệ Thống Ôn Tập Linux - 100 Câu Hỏi (Ngẫu Nhiên)</title>
+    <style>
+      :root {
+        --primary: #2c3e50;
+        --secondary: #3498db;
+        --success: #27ae60;
+        --danger: #e74c3c;
+        --light: #ecf0f1;
+        --warning: #f1c40f;
+        --dark: #1a252f;
+      }
+      body {
+        font-family: "Segoe UI", Tahoma, sans-serif;
+        background-color: #f0f2f5;
+        margin: 0;
+        display: flex;
+        height: 100vh;
+        overflow: hidden;
+      }
+      /* Sidebar Navigation */
+      #sidebar {
+        width: 260px;
+        background: var(--primary);
+        color: white;
+        display: flex;
+        flex-direction: column;
+        border-right: 1px solid #ddd;
+      }
+      #sidebar h2 {
+        font-size: 1.1em;
+        padding: 20px;
+        margin: 0;
+        background: var(--dark);
+        text-align: center;
+      }
+      #question-grid {
+        flex-grow: 1;
+        overflow-y: auto;
+        display: grid;
+        grid-template-columns: repeat(5, 1fr);
+        gap: 5px;
+        padding: 15px;
+        align-content: start;
+      }
+      .grid-item {
+        aspect-ratio: 1;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: #34495e;
+        border-radius: 4px;
+        cursor: pointer;
+        font-size: 0.8em;
+        transition: 0.2s;
+      }
+      .grid-item:hover {
+        background: var(--secondary);
+      }
+      .grid-item.current {
+        border: 2px solid var(--warning);
+        font-weight: bold;
+      }
+      .grid-item.correct {
+        background: var(--success);
+      }
+      .grid-item.wrong {
+        background: var(--danger);
+      }
+
+      /* Main Game Area */
+      #main-content {
+        flex-grow: 1;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        overflow-y: auto;
+        padding: 20px;
+      }
+      #game-container {
+        background: white;
+        width: 100%;
+        max-width: 750px;
+        padding: 35px;
+        border-radius: 12px;
+        box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+      }
+      .stats {
+        display: flex;
+        justify-content: space-between;
+        margin-bottom: 10px;
+        font-weight: bold;
+      }
+      .progress-bar {
+        width: 100%;
+        height: 8px;
+        background: #eee;
+        border-radius: 4px;
+        margin-bottom: 25px;
+      }
+      #progress-fill {
+        height: 100%;
+        background: var(--secondary);
+        width: 0%;
+        transition: 0.3s;
+      }
+      .question {
+        font-size: 1.2em;
+        font-weight: 600;
+        margin-bottom: 20px;
+        min-height: 60px;
+        color: var(--primary);
+      }
+      .options {
+        display: grid;
+        grid-template-columns: 1fr;
+        gap: 10px;
+      }
+      .option-btn {
+        padding: 14px;
+        border: 2px solid #edeff2;
+        border-radius: 8px;
+        background: white;
+        cursor: pointer;
+        transition: 0.2s;
+        text-align: left;
+        font-size: 0.95em;
+      }
+      .option-btn:hover {
+        border-color: var(--secondary);
+        background: #f8fbff;
+      }
+      .option-btn.correct {
+        background: var(--success) !important;
+        color: white;
+        border-color: var(--success);
+      }
+      .option-btn.wrong {
+        background: var(--danger) !important;
+        color: white;
+        border-color: var(--danger);
+      }
+
+      .controls {
+        margin-top: 30px;
+        display: flex;
+        justify-content: center;
+        gap: 10px;
+      }
+      .btn {
+        padding: 12px 25px;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        font-weight: bold;
+        color: white;
+      }
+      #next-btn {
+        background: var(--primary);
+        display: none;
+      }
+      #result-screen {
+        display: none;
+        text-align: center;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="sidebar">
+      <h2>DANH SÁCH CÂU HỎI</h2>
+      <div id="question-grid"></div>
+      <div style="padding: 15px; background: var(--dark); font-size: 0.75em">
+        <button onclick="location.href = '/'">Về trang chủ</button>
+        <div
+          style="display: flex; justify-content: space-around; margin-top: 10px"
+        >
+          <span><span style="color: var(--success)">■</span> Đúng</span>
+          <span><span style="color: var(--danger)">■</span> Sai</span>
+          <span><span style="color: var(--warning)">■</span> Đang xem</span>
+        </div>
+      </div>
+    </div>
+
+    <div id="main-content">
+      <div id="game-container">
+        <div id="quiz-screen">
+          <div class="stats">
+            <span>Câu hỏi: <span id="q-num">1</span>/100</span>
+            <span
+              >Điểm:
+              <span id="score" style="color: var(--success)">0</span></span
+            >
+          </div>
+          <div class="progress-bar"><div id="progress-fill"></div></div>
+          <div id="question-text" class="question">Đang tải...</div>
+          <div id="options-container" class="options"></div>
+          <div class="controls">
+            <button id="next-btn" class="btn" onclick="nextQuestion()">
+              Câu tiếp theo ➔
+            </button>
+          </div>
+        </div>
+
+        <div id="result-screen">
+          <h2>Kết Quả Ôn Tập</h2>
+          <p style="font-size: 2.5em; margin: 10px 0">
+            <span id="final-score">0</span> / 100
+          </p>
+          <div
+            id="rank"
+            style="font-weight: bold; margin-bottom: 25px; font-size: 1.2em"
+          ></div>
+          <button
+            class="btn"
+            style="background: var(--warning); color: var(--dark)"
+            onclick="retryWrongs()"
+          >
+            Ôn lại các câu sai
+          </button>
+          <button
+            class="btn"
+            style="background: var(--primary)"
+            onclick="location.reload()"
+          >
+            Làm lại từ đầu (Đảo mới)
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      // Dữ liệu 100 câu hỏi (Ví dụ)
+      const questions = [
+        {
+          q: "Phần quan trọng nhất của HDH Linux là gì?",
+          o: ["Shell", "Kernel", "Desktop Environment", "Applications"],
+          a: 1,
+        },
+        {
+          q: "Số phiên bản Kernel của Linux có gì đặc biệt?",
+          o: [
+            "Số lẻ là bản ổn định, số chẵn là bản thử nghiệm",
+            "Số chẵn là bản ổn định, số lẻ là bản thử nghiệm",
+            "Không có quy định cụ thể",
+            "Tất cả là bản thử nghiệm",
+          ],
+          a: 1,
+        },
+        {
+          q: "Khi cài Redhat Linux ở chế độ nào thì các partition DOS bị xóa hết?",
+          o: ["Workstation", "Custom", "Server", "Laptop"],
+          a: 2,
+        },
+        // Thêm các câu hỏi khác vào đây...
+      ];
+
+      let currentIdx = 0;
+      let score = 0;
+      let userAnswers = new Array(questions.length).fill(null);
+
+      // --- TÍNH NĂNG MỚI: HÀM ĐẢO MẢNG ---
+      function shuffle(array) {
+        for (let i = array.length - 1; i > 0; i--) {
+          const j = Math.floor(Math.random() * (i + 1));
+          [array[i], array[j]] = [array[j], array[i]];
+        }
+        return array;
+      }
+
+      // Đảo câu hỏi ngay khi bắt đầu
+      shuffle(questions);
+
+      function initGrid() {
+        const grid = document.getElementById("question-grid");
+        grid.innerHTML = "";
+        questions.forEach((_, i) => {
+          const div = document.createElement("div");
+          div.className = "grid-item";
+          div.id = `grid-i-${i}`;
+          div.innerText = i + 1;
+          div.onclick = () => jumpToQuestion(i);
+          grid.appendChild(div);
+        });
+        updateGridStyles();
+      }
+
+      function updateGridStyles() {
+        questions.forEach((_, i) => {
+          const el = document.getElementById(`grid-i-${i}`);
+          if (!el) return;
+          el.classList.remove("current", "correct", "wrong");
+          if (i === currentIdx) el.classList.add("current");
+          if (userAnswers[i] === true) el.classList.add("correct");
+          if (userAnswers[i] === false) el.classList.add("wrong");
+        });
+      }
+
+      function loadQuestion() {
+        const qData = questions[currentIdx];
+        document.getElementById("q-num").innerText = currentIdx + 1;
+        document.getElementById("question-text").innerText = qData.q;
+        document.getElementById("progress-fill").style.width =
+          ((currentIdx + 1) / questions.length) * 100 + "%";
+
+        const container = document.getElementById("options-container");
+        container.innerHTML = "";
+        document.getElementById("next-btn").style.display = "none";
+
+        // --- TÍNH NĂNG MỚI: ĐẢO ĐÁP ÁN ---
+        // Tạo mảng chứa thông tin đáp án để không làm mất gốc
+        let mappedOptions = qData.o.map((text, index) => ({
+          text: text,
+          isCorrect: index === qData.a,
+        }));
+
+        // Chỉ đảo đáp án nếu người dùng chưa trả lời câu này
+        if (userAnswers[currentIdx] === null) {
+          shuffle(mappedOptions);
+        }
+
+        mappedOptions.forEach((opt) => {
+          const btn = document.createElement("button");
+          btn.className = "option-btn";
+          btn.innerText = opt.text;
+
+          // Nếu đã trả lời rồi (khi quay lại từ grid), hiển thị kết quả luôn
+          if (userAnswers[currentIdx] !== null) {
+            if (opt.isCorrect) btn.classList.add("correct");
+            // Nếu người dùng chọn sai ở lượt trước, chúng ta không lưu index cụ thể trong UI mới
+            // nên chỉ hiện đáp án đúng để học.
+          } else {
+            btn.onclick = () => handleAnswer(opt.isCorrect, btn);
+          }
+          container.appendChild(btn);
+        });
+
+        updateGridStyles();
+      }
+
+      function handleAnswer(isCorrect, btn) {
+        const allBtns = document.querySelectorAll(".option-btn");
+
+        if (isCorrect) {
+          btn.classList.add("correct");
+          userAnswers[currentIdx] = true;
+        } else {
+          btn.classList.add("wrong");
+          // Tìm và highlight đáp án đúng
+          allBtns.forEach((b) => {
+            // Đây là cách đơn giản để tìm nút đúng trong DOM
+            // Chúng ta check lại logic từ mappedOptions lúc nãy
+          });
+          // Hiển thị đáp án đúng cho người dùng thấy
+          findCorrectBtn();
+          userAnswers[currentIdx] = false;
+        }
+
+        score = userAnswers.filter((v) => v === true).length;
+        document.getElementById("score").innerText = score;
+        allBtns.forEach((b) => (b.onclick = null));
+        document.getElementById("next-btn").style.display = "block";
+        updateGridStyles();
+      }
+
+      function findCorrectBtn() {
+        const qData = questions[currentIdx];
+        const allBtns = document.querySelectorAll(".option-btn");
+        allBtns.forEach((btn) => {
+          if (qData.o[qData.a] === btn.innerText) {
+            btn.classList.add("correct");
+          }
+        });
+      }
+
+      function jumpToQuestion(i) {
+        currentIdx = i;
+        loadQuestion();
+      }
+
+      function nextQuestion() {
+        if (currentIdx < questions.length - 1) {
+          currentIdx++;
+          loadQuestion();
+        } else {
+          showFinalResults();
+        }
+      }
+
+      function showFinalResults() {
+        document.getElementById("quiz-screen").style.display = "none";
+        document.getElementById("result-screen").style.display = "block";
+        document.getElementById("final-score").innerText = score;
+
+        let rankMsg = "";
+        const ratio = score / questions.length;
+        if (ratio >= 0.9) rankMsg = "💎 Bạn là một chuyên gia Linux!";
+        else if (ratio >= 0.7) rankMsg = "🌟 Kết quả rất tốt!";
+        else if (ratio >= 0.5) rankMsg = "👍 Bạn đã đạt yêu cầu.";
+        else rankMsg = "📚 Cần xem lại các kiến thức cơ bản.";
+        document.getElementById("rank").innerText = rankMsg;
+      }
+
+      function retryWrongs() {
+        const firstWrong = userAnswers.indexOf(false);
+        if (firstWrong !== -1) {
+          // Reset những câu sai về null để làm lại
+          userAnswers = userAnswers.map((v) => (v === false ? null : v));
+          document.getElementById("quiz-screen").style.display = "block";
+          document.getElementById("result-screen").style.display = "none";
+          jumpToQuestion(firstWrong);
+        } else {
+          alert("Chúc mừng! Bạn đã trả lời đúng hết tất cả các câu.");
+        }
+      }
+
+      // Khởi tạo lần đầu
+      initGrid();
+      loadQuestion();
+    </script>
+  </body>
+</html>
