@@ -1,0 +1,1073 @@
+<!doctype html>
+<html lang="vi">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Hệ Thống Ôn Tập Linux - 100 Câu Hỏi</title>
+    <style>
+      :root {
+        --primary: #2c3e50;
+        --secondary: #3498db;
+        --success: #27ae60;
+        --danger: #e74c3c;
+        --light: #ecf0f1;
+        --warning: #f1c40f;
+        --dark: #1a252f;
+      }
+      body {
+        font-family: "Segoe UI", Tahoma, sans-serif;
+        background-color: #f0f2f5;
+        margin: 0;
+        display: flex;
+        height: 100vh;
+        overflow: hidden;
+      }
+      /* Sidebar Navigation */
+      #sidebar {
+        width: 260px;
+        background: var(--primary);
+        color: white;
+        display: flex;
+        flex-direction: column;
+        border-right: 1px solid #ddd;
+      }
+      #sidebar h2 {
+        font-size: 1.1em;
+        padding: 20px;
+        margin: 0;
+        background: var(--dark);
+        text-align: center;
+      }
+      #question-grid {
+        flex-grow: 1;
+        overflow-y: auto;
+        display: grid;
+        grid-template-columns: repeat(5, 1fr);
+        gap: 5px;
+        padding: 15px;
+        align-content: start;
+      }
+      .grid-item {
+        aspect-ratio: 1;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: #34495e;
+        border-radius: 4px;
+        cursor: pointer;
+        font-size: 0.8em;
+        transition: 0.2s;
+      }
+      .grid-item:hover {
+        background: var(--secondary);
+      }
+      .grid-item.current {
+        border: 2px solid var(--warning);
+        font-weight: bold;
+      }
+      .grid-item.correct {
+        background: var(--success);
+      }
+      .grid-item.wrong {
+        background: var(--danger);
+      }
+
+      /* Main Game Area */
+      #main-content {
+        flex-grow: 1;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        overflow-y: auto;
+        padding: 20px;
+      }
+      #game-container {
+        background: white;
+        width: 100%;
+        max-width: 750px;
+        padding: 35px;
+        border-radius: 12px;
+        box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+      }
+      .stats {
+        display: flex;
+        justify-content: space-between;
+        margin-bottom: 10px;
+        font-weight: bold;
+      }
+      .progress-bar {
+        width: 100%;
+        height: 8px;
+        background: #eee;
+        border-radius: 4px;
+        margin-bottom: 25px;
+      }
+      #progress-fill {
+        height: 100%;
+        background: var(--secondary);
+        width: 0%;
+        transition: 0.3s;
+      }
+      .question {
+        font-size: 1.2em;
+        font-weight: 600;
+        margin-bottom: 20px;
+        min-height: 60px;
+        color: var(--primary);
+      }
+      .options {
+        display: grid;
+        grid-template-columns: 1fr;
+        gap: 10px;
+      }
+      .option-btn {
+        padding: 14px;
+        border: 2px solid #edeff2;
+        border-radius: 8px;
+        background: white;
+        cursor: pointer;
+        transition: 0.2s;
+        text-align: left;
+        font-size: 0.95em;
+      }
+      .option-btn:hover {
+        border-color: var(--secondary);
+        background: #f8fbff;
+      }
+      .option-btn.correct {
+        background: var(--success) !important;
+        color: white;
+        border-color: var(--success);
+      }
+      .option-btn.wrong {
+        background: var(--danger) !important;
+        color: white;
+        border-color: var(--danger);
+      }
+
+      .controls {
+        margin-top: 30px;
+        display: flex;
+        justify-content: center;
+        gap: 10px;
+      }
+      .btn {
+        padding: 12px 25px;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        font-weight: bold;
+        color: white;
+      }
+      #next-btn {
+        background: var(--primary);
+        display: none;
+      }
+      #result-screen {
+        display: none;
+        text-align: center;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="sidebar">
+      <h2>DANH SÁCH CÂU HỎI</h2>
+
+      <div id="question-grid"></div>
+      <div style="padding: 15px; background: var(--dark); font-size: 0.75em">
+        <button onclick="location.href = '/'">Về trang chủ</button>
+        <div style="display: flex; justify-content: space-around">
+          <span><span style="color: var(--success)">■</span> Đúng</span>
+          <span><span style="color: var(--danger)">■</span> Sai</span>
+          <span><span style="color: var(--warning)">■</span> Đang xem</span>
+        </div>
+      </div>
+    </div>
+
+    <div id="main-content">
+      <div id="game-container">
+        <div id="quiz-screen">
+          <div class="stats">
+            <span>Câu hỏi: <span id="q-num">1</span>/100</span>
+            <span
+              >Điểm:
+              <span id="score" style="color: var(--success)">0</span></span
+            >
+          </div>
+          <div class="progress-bar"><div id="progress-fill"></div></div>
+          <div id="question-text" class="question">Đang tải...</div>
+          <div id="options-container" class="options"></div>
+          <div class="controls">
+            <button id="next-btn" class="btn" onclick="nextQuestion()">
+              Câu tiếp theo ➔
+            </button>
+          </div>
+        </div>
+
+        <div id="result-screen">
+          <h2>Kết Quả Ôn Tập</h2>
+          <p style="font-size: 2.5em; margin: 10px 0">
+            <span id="final-score">0</span> / 100
+          </p>
+          <div
+            id="rank"
+            style="font-weight: bold; margin-bottom: 25px; font-size: 1.2em"
+          ></div>
+          <button
+            class="btn"
+            style="background: var(--warning); color: var(--dark)"
+            onclick="retryWrongs()"
+          >
+            Ôn lại các câu sai
+          </button>
+          <button
+            class="btn"
+            style="background: var(--primary)"
+            onclick="location.reload()"
+          >
+            Làm lại từ đầu
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      // ôn tập 1
+      // Dữ liệu 100 câu hỏi ôn tập Linux
+      const questions = [
+        {
+          q: "Phần quan trọng nhất của HDH Linux là gì?",
+          o: ["Shell", "Kernel", "Desktop Environment", "Applications"],
+          a: 1,
+        },
+        {
+          q: "Số phiên bản Kernel của Linux có gì đặc biệt?",
+          o: [
+            "Số lẻ là bản ổn định, số chẵn là bản thử nghiệm",
+            "Số chẵn là bản ổn định, số lẻ là bản thử nghiệm",
+            "Không có quy định cụ thể",
+            "Tất cả là bản thử nghiệm",
+          ],
+          a: 1,
+        },
+        {
+          q: "Khi cài Redhat Linux ở chế độ nào thì các partition DOS bị xóa hết?",
+          o: ["Workstation", "Custom", "Server", "Laptop"],
+          a: 2,
+        },
+        {
+          q: "Kiến trúc Kernel Linux thuộc loại nào?",
+          o: ["Monolithic", "Microkernel", "Hybrid", "Exokernel"],
+          a: 0,
+        },
+        {
+          q: "Tác giả của phiên bản HDH Linux đầu tiên là ai?",
+          o: ["Bill Gates", "Richard Stallman", "Linus Torvalds", "Steve Jobs"],
+          a: 2,
+        },
+        {
+          q: "Để liệt kê các file trong thư mục hiện hành ta dùng lệnh:",
+          o: ["dir", "ls", "list", "show"],
+          a: 1,
+        },
+        {
+          q: "Để liệt kê đầy đủ thông tin (chi tiết) của file, dùng tham số nào với lệnh ls?",
+          o: ["-a", "-l", "-f", "-s"],
+          a: 1,
+        },
+        {
+          q: "Để liệt kê cả các file ẩn trong thư mục hiện hành, dùng tham số nào với lệnh ls?",
+          o: ["-a", "-h", "-r", "-x"],
+          a: 0,
+        },
+        {
+          q: "Để chuyển sang một thư mục khác ta dùng lệnh:",
+          o: ["move", "chdir", "cd", "goto"],
+          a: 2,
+        },
+        {
+          q: "Lệnh nào sau đây là đúng để chuyển vào thư mục người dùng?",
+          o: [
+            "cd /home/sinhvien",
+            "goto /home/sinhvien",
+            "move /home/sinhvien",
+            "dir /home/sinhvien",
+          ],
+          a: 0,
+        },
+        {
+          q: "Để chép file /tmp/hello.txt vào thư mục /tmp/hello dùng lệnh:",
+          o: [
+            "mv /tmp/hello.txt /tmp/hello",
+            "cp /tmp/hello.txt /tmp/hello",
+            "rm /tmp/hello.txt /tmp/hello",
+            "ln /tmp/hello.txt /tmp/hello",
+          ],
+          a: 1,
+        },
+        {
+          q: "Để xem nội dung một tập tin văn bản trong Linux, ta dùng:",
+          o: ["cat", "less", "more", "Cả 3 phương án trên"],
+          a: 3,
+        },
+        {
+          q: "Để đọc nội dung trong một đĩa CD trong Linux, ta cần:",
+          o: [
+            "Chỉ cần cho đĩa vào",
+            "Phải dùng lệnh mount",
+            "Dùng lệnh cd-read",
+            "Dùng lệnh format",
+          ],
+          a: 1,
+        },
+        {
+          q: "Làm thế nào để đọc một đĩa mềm trong Linux?",
+          o: [
+            "Không cần làm gì, đọc trực tiếp từ ổ /dev/fd0",
+            "Phải cài driver",
+            "Phải mount bằng tay",
+            "Dùng lệnh open",
+          ],
+          a: 0,
+        },
+        {
+          q: "Tập tin nào chứa thông tin các mount point mặc định khi hệ thống boot?",
+          o: ["/etc/mtab", "/etc/fstab", "/etc/boot", "/etc/config"],
+          a: 1,
+        },
+        {
+          q: "Tập tin nào chứa thông tin các file system hiện đang được mount?",
+          o: [
+            "/etc/fstab",
+            "/etc/mntab (hoặc /etc/mtab)",
+            "/etc/resolv.conf",
+            "/etc/hosts",
+          ],
+          a: 1,
+        },
+        {
+          q: "Tập tin có thuộc tính rwx---x---x tương ứng với mã số:",
+          o: ["700", "711", "755", "777"],
+          a: 1,
+        },
+        {
+          q: "Thiết lập quyền cho hello.sh: Chủ sở hữu (đọc,ghi), Nhóm (đọc,thực thi), Khác (đọc):",
+          o: ["chmod 755", "chmod 644", "chmod 654", "chmod 744"],
+          a: 2,
+        },
+        {
+          q: "Tập tin có dấu '.' phía trước (VD: .hello.txt) có đặc tính gì?",
+          o: [
+            "Tập tin hệ thống",
+            "Tập tin thực thi",
+            "Tập tin ẩn",
+            "Tập tin tạm",
+          ],
+          a: 2,
+        },
+        {
+          q: "Lệnh nào cho phép tạo một account mới trên hệ thống?",
+          o: ["adduser", "useradd", "Cả adduser và useradd", "newuser"],
+          a: 2,
+        },
+        {
+          q: "Sau khi đánh lệnh 'useradd sinhvien', user này đã login được chưa?",
+          o: [
+            "Được ngay",
+            "Không, vì chưa có mật khẩu",
+            "Phải reboot mới được",
+            "Chỉ login được qua SSH",
+          ],
+          a: 1,
+        },
+        {
+          q: "Tập tin /etc/passwd chứa thông tin gì?",
+          o: [
+            "Mật khẩu người dùng",
+            "UID, GID, home directory, shell",
+            "Lịch sử đăng nhập",
+            "Quyền sudo",
+          ],
+          a: 1,
+        },
+        {
+          q: "Tập tin /etc/shadow chứa thông tin gì?",
+          o: [
+            "Tên người dùng",
+            "Password đã mã hóa",
+            "Cấu hình mạng",
+            "Thông tin nhóm",
+          ],
+          a: 1,
+        },
+        {
+          q: "Trong hệ thống Linux, user nào có quyền cao nhất?",
+          o: ["Admin", "Administrator", "Root", "Superuser"],
+          a: 2,
+        },
+        {
+          q: "Hệ thống Linux có mấy run level chính?",
+          o: ["5", "6", "7", "8"],
+          a: 2,
+        },
+        {
+          q: "Run level nào dùng để shutdown và halt hệ thống?",
+          o: ["Level 0", "Level 1", "Level 6", "Level 5"],
+          a: 0,
+        },
+        {
+          q: "Run level nào dùng để reboot hệ thống?",
+          o: ["Level 0", "Level 1", "Level 6", "Level 3"],
+          a: 2,
+        },
+        {
+          q: "Run level nào khởi động hệ thống ở chế độ đồ họa (X Window)?",
+          o: ["Level 1", "Level 3", "Level 5", "Level 2"],
+          a: 2,
+        },
+        {
+          q: "Run level nào không yêu cầu username/password khi login (Single User)?",
+          o: ["Level 0", "Level 1", "Level 3", "Level 5"],
+          a: 1,
+        },
+        {
+          q: "Chương trình soạn thảo văn bản nào phổ biến nhất trong Linux?",
+          o: ["Word", "Vi", "Notepad", "Sublime"],
+          a: 1,
+        },
+        {
+          q: "Chương trình soạn thảo văn bản nào không sử dụng đồ họa?",
+          o: ["Gedit", "LibreOffice", "Vi", "KWrite"],
+          a: 2,
+        },
+        {
+          q: "Emacs là một chương trình gì?",
+          o: [
+            "Công cụ lập trình",
+            "Email client",
+            "Trình soạn thảo văn bản",
+            "Tất cả các ý trên",
+          ],
+          a: 3,
+        },
+        {
+          q: "Trong trình soạn thảo vi, để vào mode insert ta dùng lệnh:",
+          o: ["Phím i", "ESC_:i", "Phím a", "Cả A và B"],
+          a: 1,
+        },
+        {
+          q: "Trong vi, để thoát mà không lưu ta dùng lệnh:",
+          o: [":wq", "ESC:q!", ":exit", ":x"],
+          a: 1,
+        },
+        {
+          q: "Để xem các tiến trình đang chạy ta dùng lệnh:",
+          o: ["list", "task", "ps", "proc"],
+          a: 2,
+        },
+        {
+          q: "Để xem chi tiết mọi tiến trình hệ thống, dùng lệnh ps với tham số:",
+          o: ["-a", "-ax", "-l", "-f"],
+          a: 1,
+        },
+        {
+          q: "Mỗi tiến trình trong Linux được đặc trưng bởi:",
+          o: ["UID", "GID", "PID", "SID"],
+          a: 2,
+        },
+        {
+          q: "Tham số PPID dùng để chỉ điều gì?",
+          o: [
+            "Tiến trình cha",
+            "Tiến trình con",
+            "Không có tham số này",
+            "Độ ưu tiên",
+          ],
+          a: 2,
+        },
+        {
+          q: "Để dừng (kết thúc) một tiến trình ta dùng lệnh:",
+          o: ["stop", "end", "kill", "halt"],
+          a: 2,
+        },
+        {
+          q: "Khi kill tiến trình cha, điều gì xảy ra với tiến trình con?",
+          o: [
+            "Con vẫn chạy",
+            "Con trở thành cha",
+            "Con sẽ chết theo",
+            "Hệ thống tự khởi động lại",
+          ],
+          a: 2,
+        },
+        {
+          q: "Để kill hết các tiến trình có tên là 'vi' dùng lệnh:",
+          o: ["kill vi", "kill -HUP vi", "stop vi", "rm vi"],
+          a: 1,
+        },
+        {
+          q: "Để thiết lập địa chỉ IP cho máy Linux ta dùng lệnh:",
+          o: ["ipconfig", "ifconfig", "netconfig", "setip"],
+          a: 1,
+        },
+        {
+          q: "Để xem trạng thái cóc port đang mở của 1 máy linux dùng lệnh:",
+          o: ["ping", "telnet", "netstat", "ifconfig"],
+          a: 2,
+        },
+        {
+          q: "Để xem bảng routing trong Linux dùng lệnh:",
+          o: ["route -nr", "netstat -nr", "Cả 2 đều đúng", "ip route show"],
+          a: 2,
+        },
+        {
+          q: "Lệnh đúng để đặt IP cho card eth0 (IP 172.16.10.11, mask 255.255.255.0):",
+          o: [
+            "ifconfig eth0 172.16.10.11 netmask 255.255.255.0",
+            "ipconfig eth0 172.16.10.11",
+            "netstat eth0 172.16.10.11",
+            "setip eth0 172.16.10.11",
+          ],
+          a: 0,
+        },
+        {
+          q: "Để tạm thời stop một card mạng (ví dụ eth0) ta dùng lệnh:",
+          o: [
+            "ifconfig eth0 stop",
+            "ifconfig eth0 down",
+            "stop eth0",
+            "disable eth0",
+          ],
+          a: 0,
+        },
+        {
+          q: "Thêm đường đi qua mạng 192.168.10.0/24 qua gateway 172.16.10.140:",
+          o: [
+            "route add-net 192.168.10.0 netmask 255.255.255.0 gw 172.16.10.140",
+            "add route 192.168.10.0",
+            "ifconfig route 192.168.10.0",
+            "ip route 192.168.10.0",
+          ],
+          a: 0,
+        },
+        {
+          q: "Khai báo Default Gateway 172.16.8.2 sử dụng lệnh route:",
+          o: [
+            "route add default gw 172.16.8.2",
+            "route add-net 0.0.0.0 netmask 0.0.0.0 gw 172.16.8.2",
+            "Cả 2 đều đúng",
+            "set gw 172.16.8.2",
+          ],
+          a: 2,
+        },
+        {
+          q: "Để xem tải của hệ thống (CPU, RAM, Process) thời gian thực dùng lệnh:",
+          o: ["load", "top", "ps", "df"],
+          a: 1,
+        },
+        {
+          q: "Tập tin định nghĩa các port cho các dịch vụ trong Linux:",
+          o: ["/etc/ports", "/etc/services", "/etc/network", "/etc/conf"],
+          a: 1,
+        },
+        {
+          q: "Dịch vụ SMTP chạy mặc định ở port nào?",
+          o: ["21", "23", "25", "80"],
+          a: 2,
+        },
+        {
+          q: "Dịch vụ WWW (HTTP) chạy mặc định ở port nào?",
+          o: ["80", "443", "8080", "22"],
+          a: 0,
+        },
+        {
+          q: "Dịch vụ nào dùng để truyền file qua mạng?",
+          o: ["SMTP", "FTP", "SSH", "HTTP"],
+          a: 1,
+        },
+        {
+          q: "Để login từ xa qua mạng vào máy Linux ta dùng:",
+          o: ["Telnet", "SSH", "Rlogin", "Tất cả các ý trên"],
+          a: 3,
+        },
+        {
+          q: "Dịch vụ SSH là viết tắt của:",
+          o: ["Secure Shell", "Simple Shell", "Super Shell", "System Shell"],
+          a: 0,
+        },
+        {
+          q: "Lệnh cài đặt gói phần mềm .rpm:",
+          o: [
+            "rpm -install name.rpm",
+            "rpm -ivh name.rpm",
+            "install name.rpm",
+            "pkg -i name.rpm",
+          ],
+          a: 1,
+        },
+        {
+          q: "Để thay đổi mount tự động cho hệ thống tập tin cục bộ dùng tập tin:",
+          o: ["/etc/mtab", "/etc/fstab", "/etc/auto", "/etc/conf"],
+          a: 1,
+        },
+        {
+          q: "Trong Apache (httpd), để xác định 'Máy web ảo' dùng khối lệnh:",
+          o: ["VirtualHost", "VirtualMachine", "WebHost", "SubDomain"],
+          a: 0,
+        },
+        {
+          q: "Thay đổi tên đăng nhập của 'user' thành 'newuser':",
+          o: [
+            "usermod -l newuser user",
+            "rename user newuser",
+            "userchange newuser",
+            "edituser user",
+          ],
+          a: 0,
+        },
+        {
+          q: "Liệt kê các file có ký tự cuối là '?' trong tên:",
+          o: ["ls *?", "ls ?*", "ls *", "ls [?]"],
+          a: 0,
+        },
+        {
+          q: "Tập tin chứa ánh xạ tên máy và IP cục bộ:",
+          o: [
+            "/etc/resolv.conf",
+            "/etc/hosts",
+            "/etc/networks",
+            "/etc/hostname",
+          ],
+          a: 1,
+        },
+        {
+          q: "Lệnh để người dùng thiết lập lịch trình cá nhân:",
+          o: ["cron -e", "crontab -e", "schedule", "task -a"],
+          a: 1,
+        },
+        {
+          q: "Chép nội dung file1 vào cuối file2:",
+          o: [
+            "cat file1 > file2",
+            "cat file1 >> file2",
+            "cp file1 file2",
+            "append file1 file2",
+          ],
+          a: 1,
+        },
+        {
+          q: "Để biết đường dẫn thư mục hiện hành dùng lệnh:",
+          o: ["path", "dir", "pwd", "where"],
+          a: 2,
+        },
+        {
+          q: "Phân giải ngược cho mạng 192.168.20.0 cần định nghĩa zone tên là:",
+          o: [
+            "20.168.192.in-addr.arpa",
+            "192.168.20.0.in-addr.arpa",
+            "reverse.192.168.20",
+            "zone.192.168.20",
+          ],
+          a: 0,
+        },
+        {
+          q: "Để tạm dừng lệnh đang thi hành (đưa vào background) nhấn:",
+          o: ["Ctrl + C", "Ctrl + Z", "Ctrl + X", "Ctrl + D"],
+          a: 1,
+        },
+        {
+          q: "Để xem nội dung tập tin văn bản ta dùng:",
+          o: ["more", "less", "cat", "Tất cả đều đúng"],
+          a: 3,
+        },
+        {
+          q: "Tạo tập tin 'new' chứa nội dung của 'data' và 'odd':",
+          o: [
+            "cat data odd > new",
+            "cat new data odd",
+            "cp data odd new",
+            "mv data odd new",
+          ],
+          a: 0,
+        },
+        {
+          q: "/doc là thư mục, lệnh nào sau đây SAI?",
+          o: ["cd /doc", "ls /doc", "En /doc mydoc", "rmdir /doc"],
+          a: 2,
+        },
+        {
+          q: "Để xem hướng dẫn cách dùng lệnh ls:",
+          o: ["help ls", "ls --help", "man ls", "Cả B và C"],
+          a: 2,
+        },
+        {
+          q: "Lệnh xóa tập tin có tên đặc biệt '-abc':",
+          o: [
+            "rm -abc",
+            "rm -- -abc (hoặc rm -f -abc)",
+            "del -abc",
+            "remove -abc",
+          ],
+          a: 1,
+        },
+        {
+          q: "Lệnh 'mkdir -p /file/ddpriv' có nghĩa là gì?",
+          o: [
+            "Xóa thư mục",
+            "Tạo thư mục bao gồm cả thư mục cha nếu chưa có",
+            "Tạo file",
+            "Đặt quyền thư mục",
+          ],
+          a: 1,
+        },
+        {
+          q: "Trong vi, lệnh nào ghi và thoát?",
+          o: [":wq", ":q!", ":w", ":x"],
+          a: 0,
+        },
+        {
+          q: "Lệnh 'chmod 750 myfile' tương đương với:",
+          o: [
+            "chmod u=rwx,g=rx,o-rwx myfile",
+            "chmod 777 myfile",
+            "chmod u=r,g=w,o=x myfile",
+            "chmod 640 myfile",
+          ],
+          a: 0,
+        },
+        {
+          q: "Để chuyển về thư mục chủ (home) của người dùng hiện hành:",
+          o: ["cd /home", "cd ~", "cd ..", "cd /"],
+          a: 1,
+        },
+        {
+          q: "Trong RedHat Linux, tên tài khoản người dùng:",
+          o: [
+            "Duy nhất",
+            "Phân biệt chữ hoa chữ thường",
+            "Không bắt đầu bằng số",
+            "Tất cả các ý trên",
+          ],
+          a: 3,
+        },
+        {
+          q: "Tập tin chứa khai báo địa chỉ máy chủ DNS:",
+          o: [
+            "/etc/hosts",
+            "/etc/resolv.conf",
+            "/etc/dns.conf",
+            "/etc/network",
+          ],
+          a: 1,
+        },
+        {
+          q: "Lệnh 'chown sales myfile' có tác dụng tương đương:",
+          o: [
+            "chown sales:sales myfile",
+            "chmod sales myfile",
+            "chgrp sales myfile",
+            "useradd sales",
+          ],
+          a: 0,
+        },
+        {
+          q: "Tập tin /etc/sysconfig/network chứa thông tin gì?",
+          o: [
+            "Mật khẩu người dùng",
+            "Tên máy tính (hostname) và Default Gateway",
+            "Cấu hình IP",
+            "Danh sách dịch vụ",
+          ],
+          a: 1,
+        },
+        {
+          q: "Để khóa tài khoản 'user' ta dùng lệnh:",
+          o: [
+            "passwd -l user",
+            "usermod -L user",
+            "Cả 2 đều đúng",
+            "userdel user",
+          ],
+          a: 2,
+        },
+        {
+          q: "Tiến trình init có đặc điểm gì?",
+          o: [
+            "Luôn có PID=1",
+            "Không thể bị kill",
+            "Gọi khởi động các tiến trình khác",
+            "Tất cả các ý trên",
+          ],
+          a: 3,
+        },
+        {
+          q: "Tập tin dùng để thay đổi runlevel mặc định:",
+          o: ["/etc/inittab", "/etc/runlevel", "/etc/boot", "/etc/rc.local"],
+          a: 0,
+        },
+        {
+          q: "Trong vi, để quay về chế độ lệnh (command mode) từ insert mode nhấn:",
+          o: ["Enter", "ESC", "Ctrl + C", "Shift"],
+          a: 1,
+        },
+        {
+          q: "Có thể tạo Symbolic Link tới một tập tin không tồn tại không?",
+          o: [
+            "Không bao giờ",
+            "Có thể (nhưng sẽ bị lỗi link)",
+            "Chỉ root mới làm được",
+            "Tùy trường hợp",
+          ],
+          a: 3,
+        },
+        {
+          q: "Tập tin script chứa khai báo định tuyến tĩnh (static routes) trong RedHat:",
+          o: [
+            "/etc/hosts",
+            "/etc/sysconfig/static-routes",
+            "/etc/route.conf",
+            "/etc/network",
+          ],
+          a: 1,
+        },
+        {
+          q: "Thông tin bắt buộc phải cung cấp khi tạo tài khoản người dùng mới:",
+          o: [
+            "Mật khẩu",
+            "Tên đăng nhập (username)",
+            "Số điện thoại",
+            "Họ tên đầy đủ",
+          ],
+          a: 1,
+        },
+        {
+          q: "Để kiểm tra dịch vụ 'crond' có khởi động cùng runlevel hay không dùng:",
+          o: [
+            "ps -ef",
+            "chkconfig --list crond",
+            "service crond status",
+            "top",
+          ],
+          a: 1,
+        },
+        {
+          q: "Nếu '/xyz' là symbolic link của '/tmp/dir', để vào thư mục đó ta dùng:",
+          o: ["cd /xyz", "cd -L /xyz", "Cả A và B", "goto /xyz"],
+          a: 1,
+        },
+        {
+          q: "Để bật chức năng IP Forward ngay lập tức (không cần reboot):",
+          o: [
+            "echo 1 > /proc/sys/net/ipv4/ip_forward",
+            "ipconfig forward on",
+            "route add forward",
+            "edit /etc/sysctl.conf",
+          ],
+          a: 0,
+        },
+        {
+          q: "Ý nghĩa của dòng crontab: '10 5 * * * /bin/foo' là gì?",
+          o: [
+            "Chạy lúc 10h5 hàng ngày",
+            "Chạy lúc 5h10 sáng mỗi ngày",
+            "Chạy 5 phút 10 giây",
+            "Chạy vào tháng 10 ngày 5",
+          ],
+          a: 1,
+        },
+        {
+          q: "Để xem các phân vùng đĩa cứng (partition) hiện có dùng lệnh:",
+          o: ["df -h", "fdisk -l", "mount", "du -sh"],
+          a: 1,
+        },
+        {
+          q: "Để kiểm tra dung lượng đĩa cứng còn trống dùng lệnh:",
+          o: ["free", "df -a", "du", "fdisk"],
+          a: 1,
+        },
+        {
+          q: "Lệnh nào dùng để kết thúc tiến trình có PID=1?",
+          o: [
+            "kill -9 1",
+            "Hệ thống không cho phép kết thúc init",
+            "stop 1",
+            "shutdown 1",
+          ],
+          a: 0,
+        },
+        {
+          q: "Thư mục /dev trong Linux chứa:",
+          o: [
+            "File cấu hình",
+            "File thực thi",
+            "Các file đại diện thiết bị",
+            "Thư mục người dùng",
+          ],
+          a: 2,
+        },
+        {
+          q: "Để tạo thêm IP phụ 192.168.10.5 cho card mạng eth0 dùng lệnh:",
+          o: [
+            "ifconfig eth0:0 192.168.10.5",
+            "ipconfig eth0 192.168.10.5",
+            "addip eth0 192.168.10.5",
+            "netstat -i 192.168.10.5",
+          ],
+          a: 0,
+        },
+        {
+          q: "Trong tập tin cấu hình DNS (zone file), bản ghi nào là bắt buộc?",
+          o: ["A record", "MX record", "SOA record", "CNAME"],
+          a: 2,
+        },
+        {
+          q: "Để sao chép thư mục /dir vào /tmp (bao gồm cả thư mục con):",
+          o: [
+            "cp -r /dir /tmp",
+            "cp -a /dir /tmp",
+            "cp --parent /dir /tmp",
+            "Tất cả đều đúng",
+          ],
+          a: 3,
+        },
+        {
+          q: "Chương trình nào dùng để kiểm tra cấu hình phân giải tên miền DNS?",
+          o: ["ping", "nslookup", "ifconfig", "traceroute"],
+          a: 1,
+        },
+        {
+          q: "Trong httpd.conf, khai báo nào sau đây là SAI?",
+          o: [
+            "Alias /image/ /ftp/pub",
+            "DocumentRoot /var/www/html",
+            "ServerRoot /etc/httpd",
+            "DirectoryIndex index.cgi",
+          ],
+          a: 3,
+        },
+        {
+          q: "Lệnh nào dùng để xóa toàn bộ thư mục /dir kể cả khi nó có dữ liệu?",
+          o: ["rmdir /dir", "rm -r /dir", "del /dir", "remove /dir"],
+          a: 1,
+        },
+      ];
+
+      let currentIdx = 0;
+      let score = 0;
+      let userAnswers = new Array(questions.length).fill(null);
+
+      function initGrid() {
+        const grid = document.getElementById("question-grid");
+        grid.innerHTML = "";
+        questions.forEach((_, i) => {
+          const div = document.createElement("div");
+          div.className = "grid-item";
+          div.id = `grid-i-${i}`;
+          div.innerText = i + 1;
+          div.onclick = () => jumpToQuestion(i);
+          grid.appendChild(div);
+        });
+        updateGridStyles();
+      }
+
+      function updateGridStyles() {
+        questions.forEach((_, i) => {
+          const el = document.getElementById(`grid-i-${i}`);
+          el.classList.remove("current", "correct", "wrong");
+          if (i === currentIdx) el.classList.add("current");
+          if (userAnswers[i] === true) el.classList.add("correct");
+          if (userAnswers[i] === false) el.classList.add("wrong");
+        });
+      }
+
+      function loadQuestion() {
+        const qData = questions[currentIdx];
+        document.getElementById("q-num").innerText = currentIdx + 1;
+        document.getElementById("question-text").innerText = qData.q;
+        document.getElementById("progress-fill").style.width =
+          ((currentIdx + 1) / questions.length) * 100 + "%";
+
+        const container = document.getElementById("options-container");
+        container.innerHTML = "";
+        document.getElementById("next-btn").style.display = "none";
+
+        qData.o.forEach((opt, i) => {
+          const btn = document.createElement("button");
+          btn.className = "option-btn";
+          btn.innerText = opt;
+
+          if (userAnswers[currentIdx] !== null) {
+            if (i === qData.a) btn.classList.add("correct");
+          } else {
+            btn.onclick = () => handleAnswer(i, btn);
+          }
+          container.appendChild(btn);
+        });
+        updateGridStyles();
+      }
+
+      function handleAnswer(selectedIdx, btn) {
+        const correctIdx = questions[currentIdx].a;
+        const allBtns = document.querySelectorAll(".option-btn");
+
+        if (selectedIdx === correctIdx) {
+          btn.classList.add("correct");
+          userAnswers[currentIdx] = true;
+        } else {
+          btn.classList.add("wrong");
+          allBtns[correctIdx].classList.add("correct");
+          userAnswers[currentIdx] = false;
+        }
+
+        score = userAnswers.filter((v) => v === true).length;
+        document.getElementById("score").innerText = score;
+        allBtns.forEach((b) => (b.onclick = null));
+        document.getElementById("next-btn").style.display = "block";
+        updateGridStyles();
+      }
+
+      function jumpToQuestion(i) {
+        currentIdx = i;
+        loadQuestion();
+      }
+
+      function nextQuestion() {
+        if (currentIdx < questions.length - 1) {
+          currentIdx++;
+          loadQuestion();
+        } else {
+          showFinalResults();
+        }
+      }
+
+      function showFinalResults() {
+        document.getElementById("quiz-screen").style.display = "none";
+        document.getElementById("result-screen").style.display = "block";
+        document.getElementById("final-score").innerText = score;
+
+        let rankMsg = "";
+        const ratio = score / 100;
+        if (ratio >= 0.9) rankMsg = "💎 Bạn là một chuyên gia Linux!";
+        else if (ratio >= 0.7) rankMsg = "🌟 Kết quả rất tốt!";
+        else if (ratio >= 0.5) rankMsg = "👍 Bạn đã đạt yêu cầu.";
+        else rankMsg = "📚 Cần xem lại các kiến thức cơ bản.";
+        document.getElementById("rank").innerText = rankMsg;
+      }
+
+      function retryWrongs() {
+        const firstWrong = userAnswers.indexOf(false);
+        if (firstWrong !== -1) {
+          userAnswers = userAnswers.map((v) => (v === false ? null : v));
+          document.getElementById("quiz-screen").style.display = "block";
+          document.getElementById("result-screen").style.display = "none";
+          jumpToQuestion(firstWrong);
+        } else {
+          alert("Chúc mừng! Bạn đã trả lời đúng hết tất cả các câu.");
+        }
+      }
+
+      initGrid();
+      loadQuestion();
+    </script>
+  </body>
+</html>
