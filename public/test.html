@@ -3,423 +3,438 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Hệ Thống Ôn Tập Linux - 100 Câu Hỏi (Ngẫu Nhiên)</title>
+    <title>Xuân Bính Ngọ 2026 - Hái Lộc Đại Cát</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&family=Quicksand:wght@500;700&display=swap"
+      rel="stylesheet"
+    />
     <style>
       :root {
-        --primary: #2c3e50;
-        --secondary: #3498db;
-        --success: #27ae60;
-        --danger: #e74c3c;
-        --light: #ecf0f1;
-        --warning: #f1c40f;
-        --dark: #1a252f;
-      }
-      body {
-        font-family: "Segoe UI", Tahoma, sans-serif;
-        background-color: #f0f2f5;
-        margin: 0;
-        display: flex;
-        height: 100vh;
-        overflow: hidden;
-      }
-      /* Sidebar Navigation */
-      #sidebar {
-        width: 260px;
-        background: var(--primary);
-        color: white;
-        display: flex;
-        flex-direction: column;
-        border-right: 1px solid #ddd;
-      }
-      #sidebar h2 {
-        font-size: 1.1em;
-        padding: 20px;
-        margin: 0;
-        background: var(--dark);
-        text-align: center;
-      }
-      #question-grid {
-        flex-grow: 1;
-        overflow-y: auto;
-        display: grid;
-        grid-template-columns: repeat(5, 1fr);
-        gap: 5px;
-        padding: 15px;
-        align-content: start;
-      }
-      .grid-item {
-        aspect-ratio: 1;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        background: #34495e;
-        border-radius: 4px;
-        cursor: pointer;
-        font-size: 0.8em;
-        transition: 0.2s;
-      }
-      .grid-item:hover {
-        background: var(--secondary);
-      }
-      .grid-item.current {
-        border: 2px solid var(--warning);
-        font-weight: bold;
-      }
-      .grid-item.correct {
-        background: var(--success);
-      }
-      .grid-item.wrong {
-        background: var(--danger);
+        --tet-red: #d41904;
+        --tet-gold: #ffcf4b;
       }
 
-      /* Main Game Area */
-      #main-content {
-        flex-grow: 1;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        overflow-y: auto;
-        padding: 20px;
-      }
-      #game-container {
-        background: white;
+      body,
+      html {
+        margin: 0;
+        padding: 0;
         width: 100%;
-        max-width: 750px;
-        padding: 35px;
-        border-radius: 12px;
-        box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
-      }
-      .stats {
-        display: flex;
-        justify-content: space-between;
-        margin-bottom: 10px;
-        font-weight: bold;
-      }
-      .progress-bar {
-        width: 100%;
-        height: 8px;
-        background: #eee;
-        border-radius: 4px;
-        margin-bottom: 25px;
-      }
-      #progress-fill {
         height: 100%;
-        background: var(--secondary);
-        width: 0%;
-        transition: 0.3s;
-      }
-      .question {
-        font-size: 1.2em;
-        font-weight: 600;
-        margin-bottom: 20px;
-        min-height: 60px;
-        color: var(--primary);
-      }
-      .options {
-        display: grid;
-        grid-template-columns: 1fr;
-        gap: 10px;
-      }
-      .option-btn {
-        padding: 14px;
-        border: 2px solid #edeff2;
-        border-radius: 8px;
-        background: white;
-        cursor: pointer;
-        transition: 0.2s;
-        text-align: left;
-        font-size: 0.95em;
-      }
-      .option-btn:hover {
-        border-color: var(--secondary);
-        background: #f8fbff;
-      }
-      .option-btn.correct {
-        background: var(--success) !important;
-        color: white;
-        border-color: var(--success);
-      }
-      .option-btn.wrong {
-        background: var(--danger) !important;
-        color: white;
-        border-color: var(--danger);
+        overflow: hidden;
+        font-family: "Quicksand", sans-serif;
       }
 
-      .controls {
-        margin-top: 30px;
-        display: flex;
-        justify-content: center;
-        gap: 10px;
+      /* Nền Full màn hình với hiệu ứng phủ tối */
+      .bg-full {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: url("https://img3.thuthuatphanmem.vn/uploads/2019/09/17/tet-nguyen-dan-background_105959025.png");
+        background-size: cover;
+        background-position: center;
+        z-index: -2;
       }
-      .btn {
-        padding: 12px 25px;
-        border: none;
-        border-radius: 5px;
-        cursor: pointer;
-        font-weight: bold;
-        color: white;
+
+      .font-tet {
+        font-family: "Dancing Script", cursive;
       }
-      #next-btn {
-        background: var(--primary);
-        display: none;
+
+      /* Cánh hoa rơi */
+      .petal {
+        position: absolute;
+        background-color: #ffdb58;
+        border-radius: 150% 0 150% 0;
+        opacity: 0.8;
+        pointer-events: none;
+        animation: fall linear infinite;
+        z-index: 1;
       }
-      #result-screen {
-        display: none;
-        text-align: center;
+      @keyframes fall {
+        0% {
+          transform: translateY(-10vh) rotate(0deg);
+        }
+        100% {
+          transform: translateY(110vh) rotate(360deg);
+        }
+      }
+
+      /* Hiệu ứng kính mờ đặc sắc */
+      .glass-card {
+        background: rgba(139, 0, 0, 0.25);
+        backdrop-filter: blur(20px);
+        border: 2px solid rgba(255, 207, 75, 0.4);
+        box-shadow:
+          0 0 30px rgba(0, 0, 0, 0.5),
+          inset 0 0 20px rgba(255, 207, 75, 0.1);
+      }
+
+      /* Bao lì xì tỏa sáng */
+      .lixi-glow {
+        position: relative;
+      }
+      .lixi-glow::after {
+        content: "";
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        width: 150%;
+        height: 150%;
+        transform: translate(-50%, -50%);
+        background: radial-gradient(
+          circle,
+          rgba(255, 207, 75, 0.4) 0%,
+          transparent 70%
+        );
+        z-index: -1;
+        animation: pulse 2s infinite;
+      }
+      @keyframes pulse {
+        0%,
+        100% {
+          transform: translate(-50%, -50%) scale(1);
+          opacity: 0.5;
+        }
+        50% {
+          transform: translate(-50%, -50%) scale(1.2);
+          opacity: 0.8;
+        }
+      }
+
+      .shake {
+        animation: shake 0.6s infinite;
+      }
+      @keyframes shake {
+        0%,
+        100% {
+          transform: scale(1) rotate(0deg);
+        }
+        25% {
+          transform: scale(1.05) rotate(-3deg);
+        }
+        75% {
+          transform: scale(1.05) rotate(3deg);
+        }
+      }
+
+      canvas {
+        position: fixed;
+        top: 0;
+        left: 0;
+        pointer-events: none;
+        z-index: 50;
+      }
+
+      input,
+      select {
+        background: rgba(255, 255, 255, 0.1) !important;
+        border: 1px solid rgba(255, 207, 75, 0.5) !important;
+        color: white !important;
+      }
+      option {
+        color: black;
+      }
+      .animate-pop {
+        animation: pop 0.5s cubic-bezier(0.17, 0.89, 0.32, 1.49);
+      }
+      @keyframes pop {
+        from {
+          transform: scale(0.5);
+          opacity: 0;
+        }
+        to {
+          transform: scale(1);
+          opacity: 1;
+        }
       }
     </style>
   </head>
-  <body>
-    <div id="sidebar">
-      <h2>DANH SÁCH CÂU HỎI</h2>
-      <div id="question-grid"></div>
-      <div style="padding: 15px; background: var(--dark); font-size: 0.75em">
-        <button onclick="location.href = '/'">Về trang chủ</button>
-        <div
-          style="display: flex; justify-content: space-around; margin-top: 10px"
-        >
-          <span><span style="color: var(--success)">■</span> Đúng</span>
-          <span><span style="color: var(--danger)">■</span> Sai</span>
-          <span><span style="color: var(--warning)">■</span> Đang xem</span>
+  <body class="flex items-center justify-center">
+    <div class="bg-full"></div>
+    <canvas id="fireworks"></canvas>
+
+    <audio id="tet-music" loop>
+      <source
+        src="https://www.chosic.com/wp-content/uploads/2021/04/Happy-New-Year-Background-Music.mp3"
+        type="audio/mpeg"
+      />
+    </audio>
+
+    <div
+      id="music-control"
+      class="fixed bottom-5 right-5 z-[100] bg-yellow-400 p-4 rounded-full cursor-pointer shadow-2xl hover:scale-110 transition"
+      onclick="toggleMusic()"
+    >
+      🎵
+    </div>
+    <div id="petals-container"></div>
+
+    <div
+      id="game-container"
+      class="max-w-md w-[92%] glass-card rounded-[45px] p-8 text-center relative z-10"
+    >
+      <div id="play-screen">
+        <div class="mb-6">
+          <span
+            class="bg-yellow-400 text-red-800 text-[10px] font-bold px-3 py-1 rounded-full uppercase tracking-tighter"
+            >New Year 2026</span
+          >
+          <h1 class="text-4xl font-tet text-white mt-3 drop-shadow-lg">
+            Xuân Bính Ngọ
+          </h1>
         </div>
+
+        <div
+          id="content-area"
+          class="min-h-[250px] flex items-center justify-center"
+        >
+          <div
+            id="wish-text"
+            class="text-xl text-white font-medium italic leading-relaxed px-4"
+          >
+            Tết này không giống Tết xưa <br />
+            Lì xì trao tay,
+            <span class="text-yellow-400 font-bold not-italic"
+              >VẬN MAY SẼ TỚI!</span
+            >
+          </div>
+        </div>
+
+        <button
+          id="next-btn"
+          onclick="nextStep()"
+          class="mt-4 w-full bg-gradient-to-r from-yellow-500 to-yellow-200 text-red-900 font-black py-4 rounded-2xl shadow-[0_10px_20px_rgba(0,0,0,0.3)] hover:brightness-110 active:scale-95 transition-all uppercase tracking-widest"
+        >
+          Khám phá ngay ➔
+        </button>
+      </div>
+
+      <div id="prize-screen" class="hidden animate-pop">
+        <h2
+          class="text-yellow-400 font-bold tracking-widest text-sm uppercase mb-2"
+        >
+          🧧 Lộc Trời Cho 🧧
+        </h2>
+        <p class="text-white opacity-80 italic text-sm">
+          Chúc mừng! Bạn đã hái được:
+        </p>
+        <div
+          id="reveal-money"
+          class="text-7xl font-black text-yellow-300 my-8 drop-shadow-[0_0_15px_rgba(255,207,75,0.6)]"
+        >
+          0đ
+        </div>
+        <p class="text-white/90 text-sm mb-8 leading-relaxed">
+          Tiền tài rủng rỉnh, sự nghiệp thăng hoa <br />
+          Vui xuân Bính Ngọ, lộc đến muôn nhà!
+        </p>
+        <button
+          onclick="showForm()"
+          class="w-full bg-yellow-400 text-red-900 font-black py-4 rounded-2xl shadow-xl hover:bg-yellow-300 transition-all uppercase"
+        >
+          Nhận về tài khoản ➔
+        </button>
+      </div>
+
+      <div id="bank-form" class="hidden animate-pop">
+        <h2 class="text-2xl font-tet text-yellow-400 mb-6">
+          Thông Tin Nhận Lộc
+        </h2>
+        <div class="space-y-4 text-left">
+          <div>
+            <label
+              class="text-yellow-400 text-[10px] font-bold ml-2 uppercase tracking-widest"
+              >Chọn Ngân hàng</label
+            >
+            <select
+              id="bank-name"
+              class="w-full mt-1 p-4 rounded-2xl focus:outline-none appearance-none"
+            >
+              <option value="Vietcombank">Vietcombank</option>
+              <option value="MB Bank">MB Bank (Quân Đội)</option>
+              <option value="Techcombank">Techcombank</option>
+              <option value="TPBank">TPBank</option>
+              <option value="MoMo / Viettel Money">MoMo / Viettel Money</option>
+            </select>
+          </div>
+          <div>
+            <label
+              class="text-yellow-400 text-[10px] font-bold ml-2 uppercase tracking-widest"
+              >Số tài khoản / SĐT</label
+            >
+            <input
+              id="bank-account"
+              type="text"
+              placeholder="Nhập số tài khoản..."
+              class="w-full mt-1 p-4 rounded-2xl focus:outline-none placeholder:text-white/20"
+            />
+          </div>
+        </div>
+        <button
+          onclick="confirmFinal()"
+          class="mt-8 w-full bg-yellow-400 text-red-900 font-black py-4 rounded-2xl hover:bg-yellow-300 shadow-lg uppercase transition-all"
+        >
+          Xác nhận & Kết thúc
+        </button>
       </div>
     </div>
 
-    <div id="main-content">
-      <div id="game-container">
-        <div id="quiz-screen">
-          <div class="stats">
-            <span>Câu hỏi: <span id="q-num">1</span>/100</span>
-            <span
-              >Điểm:
-              <span id="score" style="color: var(--success)">0</span></span
-            >
-          </div>
-          <div class="progress-bar"><div id="progress-fill"></div></div>
-          <div id="question-text" class="question">Đang tải...</div>
-          <div id="options-container" class="options"></div>
-          <div class="controls">
-            <button id="next-btn" class="btn" onclick="nextQuestion()">
-              Câu tiếp theo ➔
-            </button>
-          </div>
-        </div>
-
-        <div id="result-screen">
-          <h2>Kết Quả Ôn Tập</h2>
-          <p style="font-size: 2.5em; margin: 10px 0">
-            <span id="final-score">0</span> / 100
-          </p>
-          <div
-            id="rank"
-            style="font-weight: bold; margin-bottom: 25px; font-size: 1.2em"
-          ></div>
-          <button
-            class="btn"
-            style="background: var(--warning); color: var(--dark)"
-            onclick="retryWrongs()"
-          >
-            Ôn lại các câu sai
-          </button>
-          <button
-            class="btn"
-            style="background: var(--primary)"
-            onclick="location.reload()"
-          >
-            Làm lại từ đầu (Đảo mới)
-          </button>
-        </div>
+    <div
+      id="success-modal"
+      class="fixed inset-0 bg-red-950/98 hidden flex items-center justify-center z-[60] p-6"
+    >
+      <div
+        class="bg-gradient-to-b from-red-600 to-red-800 border-4 border-yellow-400 rounded-[40px] p-10 text-center max-w-sm w-full shadow-2xl"
+      >
+        <div class="text-6xl mb-4">🧧</div>
+        <h3 class="text-yellow-400 text-2xl font-black uppercase">
+          Gửi Thành Công!
+        </h3>
+        <p class="text-white/80 mt-4 text-sm leading-relaxed italic">
+          Lộc Xuân đang trên đường tới ví của bạn. Chúc bạn một năm 2026 rực rỡ!
+        </p>
+        <button
+          onclick="location.reload()"
+          class="mt-8 w-full bg-yellow-400 text-red-900 font-black py-4 rounded-2xl uppercase shadow-xl"
+        >
+          Hoàn tất
+        </button>
       </div>
     </div>
 
     <script>
-      // Dữ liệu 100 câu hỏi (Ví dụ)
-      const questions = [
-        {
-          q: "Phần quan trọng nhất của HDH Linux là gì?",
-          o: ["Shell", "Kernel", "Desktop Environment", "Applications"],
-          a: 1,
-        },
-        {
-          q: "Số phiên bản Kernel của Linux có gì đặc biệt?",
-          o: [
-            "Số lẻ là bản ổn định, số chẵn là bản thử nghiệm",
-            "Số chẵn là bản ổn định, số lẻ là bản thử nghiệm",
-            "Không có quy định cụ thể",
-            "Tất cả là bản thử nghiệm",
-          ],
-          a: 1,
-        },
-        {
-          q: "Khi cài Redhat Linux ở chế độ nào thì các partition DOS bị xóa hết?",
-          o: ["Workstation", "Custom", "Server", "Laptop"],
-          a: 2,
-        },
-        // Thêm các câu hỏi khác vào đây...
+      const music = document.getElementById("tet-music");
+      const canvas = document.getElementById("fireworks");
+      const ctx = canvas.getContext("2d");
+
+      const wishes = [
+        "Chúc bạn năm mới: <br> <span class='text-2xl text-yellow-400 font-bold'>SỨC KHỎE NHƯ NGỰA CHIẾN!</span> 🐎",
+        "Công việc hanh thông, <br> <span class='text-2xl text-yellow-400 font-bold'>MÃ ĐÁO THÀNH CÔNG!</span> 📈",
+        "Tình duyên thắm thiết, <br> <span class='text-2xl text-yellow-400 font-bold'>HẠNH PHÚC VỮNG BỀN!</span> ❤️",
+        "Và bây giờ... <br> Hãy sẵn sàng để <br> <span class='text-2xl text-yellow-400 font-bold'>HÁI LỘC ĐẦU NĂM!</span> 👇",
       ];
 
-      let currentIdx = 0;
-      let score = 0;
-      let userAnswers = new Array(questions.length).fill(null);
+      let currentStep = 0;
+      let finalPrize = "";
 
-      // --- TÍNH NĂNG MỚI: HÀM ĐẢO MẢNG ---
-      function shuffle(array) {
-        for (let i = array.length - 1; i > 0; i--) {
-          const j = Math.floor(Math.random() * (i + 1));
-          [array[i], array[j]] = [array[j], array[i]];
+      // Resize Canvas cho pháo hoa
+      function resize() {
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+      }
+      window.addEventListener("resize", resize);
+      resize();
+
+      // Tạo cánh hoa rơi
+      function createPetals() {
+        const container = document.getElementById("petals-container");
+        for (let i = 0; i < 35; i++) {
+          let petal = document.createElement("div");
+          petal.className = "petal";
+          petal.style.left = Math.random() * 100 + "vw";
+          petal.style.width = Math.random() * 15 + 10 + "px";
+          petal.style.height = petal.style.width;
+          petal.style.animationDuration = Math.random() * 3 + 4 + "s";
+          petal.style.animationDelay = Math.random() * 5 + "s";
+          container.appendChild(petal);
         }
-        return array;
+      }
+      createPetals();
+
+      function toggleMusic() {
+        music.paused ? music.play() : music.pause();
       }
 
-      // Đảo câu hỏi ngay khi bắt đầu
-      shuffle(questions);
-
-      function initGrid() {
-        const grid = document.getElementById("question-grid");
-        grid.innerHTML = "";
-        questions.forEach((_, i) => {
-          const div = document.createElement("div");
-          div.className = "grid-item";
-          div.id = `grid-i-${i}`;
-          div.innerText = i + 1;
-          div.onclick = () => jumpToQuestion(i);
-          grid.appendChild(div);
-        });
-        updateGridStyles();
-      }
-
-      function updateGridStyles() {
-        questions.forEach((_, i) => {
-          const el = document.getElementById(`grid-i-${i}`);
-          if (!el) return;
-          el.classList.remove("current", "correct", "wrong");
-          if (i === currentIdx) el.classList.add("current");
-          if (userAnswers[i] === true) el.classList.add("correct");
-          if (userAnswers[i] === false) el.classList.add("wrong");
-        });
-      }
-
-      function loadQuestion() {
-        const qData = questions[currentIdx];
-        document.getElementById("q-num").innerText = currentIdx + 1;
-        document.getElementById("question-text").innerText = qData.q;
-        document.getElementById("progress-fill").style.width =
-          ((currentIdx + 1) / questions.length) * 100 + "%";
-
-        const container = document.getElementById("options-container");
-        container.innerHTML = "";
-        document.getElementById("next-btn").style.display = "none";
-
-        // --- TÍNH NĂNG MỚI: ĐẢO ĐÁP ÁN ---
-        // Tạo mảng chứa thông tin đáp án để không làm mất gốc
-        let mappedOptions = qData.o.map((text, index) => ({
-          text: text,
-          isCorrect: index === qData.a,
-        }));
-
-        // Chỉ đảo đáp án nếu người dùng chưa trả lời câu này
-        if (userAnswers[currentIdx] === null) {
-          shuffle(mappedOptions);
-        }
-
-        mappedOptions.forEach((opt) => {
-          const btn = document.createElement("button");
-          btn.className = "option-btn";
-          btn.innerText = opt.text;
-
-          // Nếu đã trả lời rồi (khi quay lại từ grid), hiển thị kết quả luôn
-          if (userAnswers[currentIdx] !== null) {
-            if (opt.isCorrect) btn.classList.add("correct");
-            // Nếu người dùng chọn sai ở lượt trước, chúng ta không lưu index cụ thể trong UI mới
-            // nên chỉ hiện đáp án đúng để học.
-          } else {
-            btn.onclick = () => handleAnswer(opt.isCorrect, btn);
-          }
-          container.appendChild(btn);
-        });
-
-        updateGridStyles();
-      }
-
-      function handleAnswer(isCorrect, btn) {
-        const allBtns = document.querySelectorAll(".option-btn");
-
-        if (isCorrect) {
-          btn.classList.add("correct");
-          userAnswers[currentIdx] = true;
+      function nextStep() {
+        if (currentStep === 0) music.play();
+        const contentArea = document.getElementById("content-area");
+        if (currentStep < wishes.length) {
+          contentArea.innerHTML = `<div class="animate-pop text-xl text-white font-medium italic px-4">${wishes[currentStep]}</div>`;
+          currentStep++;
+          document.getElementById("next-btn").innerText =
+            currentStep === wishes.length ? "NHẬN LÌ XÌ NGAY 🧧" : "TIẾP TỤC ➔";
         } else {
-          btn.classList.add("wrong");
-          // Tìm và highlight đáp án đúng
-          allBtns.forEach((b) => {
-            // Đây là cách đơn giản để tìm nút đúng trong DOM
-            // Chúng ta check lại logic từ mappedOptions lúc nãy
+          showLixi();
+        }
+      }
+
+      function showLixi() {
+        const contentArea = document.getElementById("content-area");
+        document.getElementById("next-btn").classList.add("hidden");
+        contentArea.innerHTML = `
+                <div onclick="openLixi()" class="shake lixi-glow cursor-pointer">
+                    <div class="w-36 h-52 bg-gradient-to-b from-red-500 to-red-700 border-4 border-yellow-400 rounded-3xl shadow-2xl flex flex-col items-center justify-center relative overflow-hidden">
+                        <span class="text-6xl mb-2">🧧</span>
+                        <div class="bg-yellow-400 text-red-800 text-[10px] font-black py-1 px-4 rounded-full mb-4 uppercase">Lộc 2026</div>
+                        <div class="w-14 h-14 bg-yellow-400 rounded-full border-4 border-red-800 flex items-center justify-center font-black text-red-800 shadow-inner">MỞ</div>
+                    </div>
+                    <p class="mt-8 text-yellow-400 font-bold animate-pulse text-xs tracking-widest uppercase">Chạm để mở lộc!</p>
+                </div>`;
+      }
+
+      // Hiệu ứng Pháo hoa đơn giản bằng Canvas
+      let particles = [];
+      function createFirework() {
+        for (let i = 0; i < 100; i++) {
+          particles.push({
+            x: canvas.width / 2,
+            y: canvas.height / 2,
+            vx: (Math.random() - 0.5) * 10,
+            vy: (Math.random() - 0.5) * 10,
+            size: Math.random() * 3 + 1,
+            color: `hsl(${Math.random() * 360}, 100%, 50%)`,
+            life: 100,
           });
-          // Hiển thị đáp án đúng cho người dùng thấy
-          findCorrectBtn();
-          userAnswers[currentIdx] = false;
         }
-
-        score = userAnswers.filter((v) => v === true).length;
-        document.getElementById("score").innerText = score;
-        allBtns.forEach((b) => (b.onclick = null));
-        document.getElementById("next-btn").style.display = "block";
-        updateGridStyles();
       }
 
-      function findCorrectBtn() {
-        const qData = questions[currentIdx];
-        const allBtns = document.querySelectorAll(".option-btn");
-        allBtns.forEach((btn) => {
-          if (qData.o[qData.a] === btn.innerText) {
-            btn.classList.add("correct");
-          }
+      function updateFireworks() {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        particles.forEach((p, i) => {
+          p.x += p.vx;
+          p.y += p.vy;
+          p.life--;
+          ctx.fillStyle = p.color;
+          ctx.beginPath();
+          ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
+          ctx.fill();
+          if (p.life <= 0) particles.splice(i, 1);
         });
+        requestAnimationFrame(updateFireworks);
+      }
+      updateFireworks();
+
+      function openLixi() {
+        createFirework(); // Kích hoạt pháo hoa
+        const prizes = [
+          "20.000đ",
+          "30.000đ",
+          "50.000đ",
+          "100.000đ",
+          "200.000đ",
+        ];
+        finalPrize = prizes[Math.floor(Math.random() * prizes.length)];
+        document.getElementById("reveal-money").innerText = finalPrize;
+
+        document.getElementById("play-screen").classList.add("hidden");
+        document.getElementById("prize-screen").classList.remove("hidden");
       }
 
-      function jumpToQuestion(i) {
-        currentIdx = i;
-        loadQuestion();
+      function showForm() {
+        document.getElementById("prize-screen").classList.add("hidden");
+        document.getElementById("bank-form").classList.remove("hidden");
       }
 
-      function nextQuestion() {
-        if (currentIdx < questions.length - 1) {
-          currentIdx++;
-          loadQuestion();
-        } else {
-          showFinalResults();
+      function confirmFinal() {
+        const acc = document.getElementById("bank-account").value;
+        if (acc.trim() === "") {
+          alert("Đừng quên nhập số tài khoản để nhận tiền bạn nhé!");
+          return;
         }
+        document.getElementById("success-modal").classList.remove("hidden");
       }
-
-      function showFinalResults() {
-        document.getElementById("quiz-screen").style.display = "none";
-        document.getElementById("result-screen").style.display = "block";
-        document.getElementById("final-score").innerText = score;
-
-        let rankMsg = "";
-        const ratio = score / questions.length;
-        if (ratio >= 0.9) rankMsg = "💎 Bạn là một chuyên gia Linux!";
-        else if (ratio >= 0.7) rankMsg = "🌟 Kết quả rất tốt!";
-        else if (ratio >= 0.5) rankMsg = "👍 Bạn đã đạt yêu cầu.";
-        else rankMsg = "📚 Cần xem lại các kiến thức cơ bản.";
-        document.getElementById("rank").innerText = rankMsg;
-      }
-
-      function retryWrongs() {
-        const firstWrong = userAnswers.indexOf(false);
-        if (firstWrong !== -1) {
-          // Reset những câu sai về null để làm lại
-          userAnswers = userAnswers.map((v) => (v === false ? null : v));
-          document.getElementById("quiz-screen").style.display = "block";
-          document.getElementById("result-screen").style.display = "none";
-          jumpToQuestion(firstWrong);
-        } else {
-          alert("Chúc mừng! Bạn đã trả lời đúng hết tất cả các câu.");
-        }
-      }
-
-      // Khởi tạo lần đầu
-      initGrid();
-      loadQuestion();
     </script>
   </body>
 </html>
