@@ -2,438 +2,631 @@
 <html lang="vi">
   <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Xuân Bính Ngọ 2026 - Hái Lộc Đại Cát</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link
-      href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&family=Quicksand:wght@500;700&display=swap"
-      rel="stylesheet"
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"
     />
+    <title>Tết Ất Tỵ 2026 - Lì Xì Free Fire</title>
     <style>
       :root {
-        --tet-red: #d41904;
-        --tet-gold: #ffcf4b;
+        --gold: #ffd700;
+        --glass: rgba(15, 15, 20, 0.9);
+        --neon-blue: #00ffff;
       }
 
-      body,
-      html {
+      body {
         margin: 0;
         padding: 0;
-        width: 100%;
-        height: 100%;
+        background: #000;
+        font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+        color: white;
         overflow: hidden;
-        font-family: "Quicksand", sans-serif;
-      }
-
-      /* Nền Full màn hình với hiệu ứng phủ tối */
-      .bg-full {
-        position: fixed;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        background: url("https://img3.thuthuatphanmem.vn/uploads/2019/09/17/tet-nguyen-dan-background_105959025.png");
-        background-size: cover;
-        background-position: center;
-        z-index: -2;
-      }
-
-      .font-tet {
-        font-family: "Dancing Script", cursive;
-      }
-
-      /* Cánh hoa rơi */
-      .petal {
-        position: absolute;
-        background-color: #ffdb58;
-        border-radius: 150% 0 150% 0;
-        opacity: 0.8;
-        pointer-events: none;
-        animation: fall linear infinite;
-        z-index: 1;
-      }
-      @keyframes fall {
-        0% {
-          transform: translateY(-10vh) rotate(0deg);
-        }
-        100% {
-          transform: translateY(110vh) rotate(360deg);
-        }
-      }
-
-      /* Hiệu ứng kính mờ đặc sắc */
-      .glass-card {
-        background: rgba(139, 0, 0, 0.25);
-        backdrop-filter: blur(20px);
-        border: 2px solid rgba(255, 207, 75, 0.4);
-        box-shadow:
-          0 0 30px rgba(0, 0, 0, 0.5),
-          inset 0 0 20px rgba(255, 207, 75, 0.1);
-      }
-
-      /* Bao lì xì tỏa sáng */
-      .lixi-glow {
-        position: relative;
-      }
-      .lixi-glow::after {
-        content: "";
-        position: absolute;
-        top: 50%;
-        left: 50%;
-        width: 150%;
-        height: 150%;
-        transform: translate(-50%, -50%);
-        background: radial-gradient(
-          circle,
-          rgba(255, 207, 75, 0.4) 0%,
-          transparent 70%
-        );
-        z-index: -1;
-        animation: pulse 2s infinite;
-      }
-      @keyframes pulse {
-        0%,
-        100% {
-          transform: translate(-50%, -50%) scale(1);
-          opacity: 0.5;
-        }
-        50% {
-          transform: translate(-50%, -50%) scale(1.2);
-          opacity: 0.8;
-        }
-      }
-
-      .shake {
-        animation: shake 0.6s infinite;
-      }
-      @keyframes shake {
-        0%,
-        100% {
-          transform: scale(1) rotate(0deg);
-        }
-        25% {
-          transform: scale(1.05) rotate(-3deg);
-        }
-        75% {
-          transform: scale(1.05) rotate(3deg);
-        }
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+        width: 100vw;
       }
 
       canvas {
-        position: fixed;
+        position: absolute;
         top: 0;
         left: 0;
-        pointer-events: none;
-        z-index: 50;
+        width: 100%;
+        height: 100%;
+        z-index: 1;
       }
 
-      input,
-      select {
-        background: rgba(255, 255, 255, 0.1) !important;
-        border: 1px solid rgba(255, 207, 75, 0.5) !important;
-        color: white !important;
+      /* --- KHUNG CHỨA UI --- */
+      .card {
+        width: 85%;
+        max-width: 380px;
+        background: var(--glass);
+        backdrop-filter: blur(15px);
+        border: 2px solid var(--gold);
+        border-radius: 20px;
+        padding: 25px 20px;
+        text-align: center;
+        z-index: 10;
+        box-shadow: 0 0 40px rgba(255, 215, 0, 0.25);
+
+        display: none; /* Ẩn mặc định chờ 30s */
+        flex-direction: column;
+        justify-content: center;
+        min-height: 420px;
+        opacity: 0;
+        transition: opacity 1s ease-in;
       }
-      option {
-        color: black;
+
+      .card.show {
+        display: flex;
+        opacity: 1;
+        animation: floatUp 0.8s ease-out;
       }
-      .animate-pop {
-        animation: pop 0.5s cubic-bezier(0.17, 0.89, 0.32, 1.49);
-      }
-      @keyframes pop {
+
+      @keyframes floatUp {
         from {
-          transform: scale(0.5);
+          transform: translateY(40px);
           opacity: 0;
         }
         to {
-          transform: scale(1);
+          transform: translateY(0);
           opacity: 1;
         }
       }
+
+      /* --- TIÊU ĐỀ --- */
+      .hpny-text {
+        font-size: 2.2rem;
+        font-weight: 900;
+        background: linear-gradient(to bottom, #ffd700, #ff8c00);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        margin-bottom: 15px;
+        text-transform: uppercase;
+        line-height: 1.1;
+        text-shadow: 0 2px 15px rgba(255, 215, 0, 0.4);
+        opacity: 0;
+        transform: scale(0.5);
+        transition: all 0.8s cubic-bezier(0.34, 1.56, 0.64, 1);
+      }
+
+      .hpny-text.animate {
+        opacity: 1;
+        transform: scale(1);
+      }
+
+      /* --- PHẦN LỜI CHÚC --- */
+      #wish-container {
+        min-height: 140px;
+        background: rgba(255, 255, 255, 0.08);
+        border-radius: 15px;
+        padding: 20px 15px;
+        margin: 15px 0 25px 0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border: 1px dashed rgba(255, 215, 0, 0.3);
+      }
+
+      #wish-text {
+        font-size: 1.2rem;
+        line-height: 1.6;
+        letter-spacing: 0.5px;
+        color: #fffacd;
+        font-weight: 500;
+        text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.8);
+        text-align: center;
+        white-space: pre-line; /* Để hiển thị xuống dòng */
+      }
+
+      /* --- NÚT BẤM --- */
+      button {
+        border: none;
+        padding: 16px;
+        font-weight: bold;
+        border-radius: 50px;
+        font-size: 1.1rem;
+        cursor: pointer;
+        text-transform: uppercase;
+        width: 100%;
+        letter-spacing: 1px;
+      }
+
+      .btn-lixi {
+        background: linear-gradient(135deg, #e60000, #ff4d4d);
+        color: #fff;
+        box-shadow: 0 5px 20px rgba(255, 0, 0, 0.4);
+        animation: pulse 1.5s infinite;
+        opacity: 0;
+        transform: translateY(20px);
+        transition: all 0.5s ease;
+        pointer-events: none;
+      }
+
+      .btn-lixi.show-btn {
+        opacity: 1;
+        transform: translateY(0);
+        pointer-events: auto;
+      }
+
+      @keyframes pulse {
+        0% {
+          transform: scale(1);
+        }
+        50% {
+          transform: scale(1.03);
+        }
+        100% {
+          transform: scale(1);
+        }
+      }
+
+      .hidden {
+        display: none !important;
+      }
+
+      /* --- UI LÌ XÌ --- */
+      .lixi-wrap {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        margin-top: 20px;
+        height: 200px;
+      }
+      .lixi-img {
+        width: 120px; /* Lớn hơn vì chỉ có 1 cái */
+        cursor: pointer;
+        animation: shake 3s infinite ease-in-out;
+        transition: transform 0.3s;
+      }
+      .lixi-img:hover {
+        transform: scale(1.1) rotate(10deg);
+      }
+
+      @keyframes shake {
+        0%,
+        100% {
+          transform: rotate(0deg);
+        }
+        10%,
+        30% {
+          transform: rotate(-5deg);
+        }
+        20%,
+        40% {
+          transform: rotate(5deg);
+        }
+      }
+
+      /* --- UI PHẦN THƯỞNG --- */
+      .prize-text {
+        font-size: 1.6rem;
+        color: var(--neon-blue);
+        margin: 20px 0;
+        text-shadow: 0 0 15px var(--neon-blue);
+        border: 2px dashed var(--neon-blue);
+        padding: 20px;
+        border-radius: 15px;
+        background: rgba(0, 255, 255, 0.08);
+        font-weight: 800;
+        line-height: 1.4;
+      }
+
+      input {
+        padding: 15px;
+        width: 100%;
+        box-sizing: border-box;
+        margin: 15px 0;
+        border-radius: 12px;
+        border: 2px solid var(--gold);
+        background: #fff;
+        font-size: 1.1rem;
+        text-align: center;
+        color: #000;
+      }
+
+      .btn-confirm {
+        background: linear-gradient(135deg, #ffd700, #ff8c00);
+        color: #000;
+        box-shadow: 0 4px 15px rgba(255, 215, 0, 0.3);
+      }
+
+      /* --- UI SUCCESS --- */
+      .success-msg {
+        font-size: 1.2rem;
+        color: #7aff7a;
+        margin-top: 20px;
+        line-height: 1.6;
+        text-shadow: 0 0 10px rgba(0, 255, 0, 0.5);
+      }
     </style>
   </head>
-  <body class="flex items-center justify-center">
-    <div class="bg-full"></div>
+  <body>
     <canvas id="fireworks"></canvas>
 
-    <audio id="tet-music" loop>
-      <source
-        src="https://www.chosic.com/wp-content/uploads/2021/04/Happy-New-Year-Background-Music.mp3"
-        type="audio/mpeg"
-      />
-    </audio>
+    <div class="card">
+      <div id="wish-ui">
+        <div id="hpny-title" class="hpny-text">CHÚC MỪNG<br />NĂM MỚI 2026</div>
 
-    <div
-      id="music-control"
-      class="fixed bottom-5 right-5 z-[100] bg-yellow-400 p-4 rounded-full cursor-pointer shadow-2xl hover:scale-110 transition"
-      onclick="toggleMusic()"
-    >
-      🎵
-    </div>
-    <div id="petals-container"></div>
-
-    <div
-      id="game-container"
-      class="max-w-md w-[92%] glass-card rounded-[45px] p-8 text-center relative z-10"
-    >
-      <div id="play-screen">
-        <div class="mb-6">
-          <span
-            class="bg-yellow-400 text-red-800 text-[10px] font-bold px-3 py-1 rounded-full uppercase tracking-tighter"
-            >New Year 2026</span
-          >
-          <h1 class="text-4xl font-tet text-white mt-3 drop-shadow-lg">
-            Xuân Bính Ngọ
-          </h1>
+        <div id="wish-container">
+          <div id="wish-text"></div>
         </div>
 
-        <div
-          id="content-area"
-          class="min-h-[250px] flex items-center justify-center"
-        >
-          <div
-            id="wish-text"
-            class="text-xl text-white font-medium italic leading-relaxed px-4"
-          >
-            Tết này không giống Tết xưa <br />
-            Lì xì trao tay,
-            <span class="text-yellow-400 font-bold not-italic"
-              >VẬN MAY SẼ TỚI!</span
-            >
-          </div>
-        </div>
-
-        <button
-          id="next-btn"
-          onclick="nextStep()"
-          class="mt-4 w-full bg-gradient-to-r from-yellow-500 to-yellow-200 text-red-900 font-black py-4 rounded-2xl shadow-[0_10px_20px_rgba(0,0,0,0.3)] hover:brightness-110 active:scale-95 transition-all uppercase tracking-widest"
-        >
-          Khám phá ngay ➔
+        <button id="btn-get-lixi" class="btn-lixi" onclick="goToLixi()">
+          🧧 NHẬN LÌ XÌ NGAY 🧧
         </button>
       </div>
 
-      <div id="prize-screen" class="hidden animate-pop">
-        <h2
-          class="text-yellow-400 font-bold tracking-widest text-sm uppercase mb-2"
+      <div id="lixi-ui" class="hidden">
+        <p
+          style="
+            font-size: 1.2rem;
+            margin-bottom: 10px;
+            color: #ffd700;
+            font-weight: bold;
+          "
         >
-          🧧 Lộc Trời Cho 🧧
-        </h2>
-        <p class="text-white opacity-80 italic text-sm">
-          Chúc mừng! Bạn đã hái được:
+          BẤM ĐỂ MỞ QUÀ
         </p>
-        <div
-          id="reveal-money"
-          class="text-7xl font-black text-yellow-300 my-8 drop-shadow-[0_0_15px_rgba(255,207,75,0.6)]"
-        >
-          0đ
+        <div class="lixi-wrap">
+          <div onclick="openGift()" style="font-size: 120px">🧧</div>
         </div>
-        <p class="text-white/90 text-sm mb-8 leading-relaxed">
-          Tiền tài rủng rỉnh, sự nghiệp thăng hoa <br />
-          Vui xuân Bính Ngọ, lộc đến muôn nhà!
-        </p>
-        <button
-          onclick="showForm()"
-          class="w-full bg-yellow-400 text-red-900 font-black py-4 rounded-2xl shadow-xl hover:bg-yellow-300 transition-all uppercase"
+      </div>
+
+      <div id="gift-ui" class="hidden">
+        <p
+          style="
+            font-size: 1.2rem;
+            font-weight: bold;
+            color: #ffd700;
+            margin-bottom: 5px;
+          "
         >
-          Nhận về tài khoản ➔
+          🎉 QUÀ NĂM MỚI CỦA BẠN 🎉
+        </p>
+        <div class="prize-text">THẺ VÔ CỰC<br />SONG NGƯ</div>
+        <p style="font-size: 0.95rem; opacity: 0.8">
+          Nhập ID game để nhận quà về hộp thư
+        </p>
+        <input
+          type="number"
+          id="uid"
+          placeholder="Nhập ID Game (VD: 12345678)"
+        />
+        <button class="btn-confirm" onclick="confirmGift()">
+          XÁC NHẬN NHẬN QUÀ
         </button>
       </div>
 
-      <div id="bank-form" class="hidden animate-pop">
-        <h2 class="text-2xl font-tet text-yellow-400 mb-6">
-          Thông Tin Nhận Lộc
-        </h2>
-        <div class="space-y-4 text-left">
-          <div>
-            <label
-              class="text-yellow-400 text-[10px] font-bold ml-2 uppercase tracking-widest"
-              >Chọn Ngân hàng</label
-            >
-            <select
-              id="bank-name"
-              class="w-full mt-1 p-4 rounded-2xl focus:outline-none appearance-none"
-            >
-              <option value="Vietcombank">Vietcombank</option>
-              <option value="MB Bank">MB Bank (Quân Đội)</option>
-              <option value="Techcombank">Techcombank</option>
-              <option value="TPBank">TPBank</option>
-              <option value="MoMo / Viettel Money">MoMo / Viettel Money</option>
-            </select>
-          </div>
-          <div>
-            <label
-              class="text-yellow-400 text-[10px] font-bold ml-2 uppercase tracking-widest"
-              >Số tài khoản / SĐT</label
-            >
-            <input
-              id="bank-account"
-              type="text"
-              placeholder="Nhập số tài khoản..."
-              class="w-full mt-1 p-4 rounded-2xl focus:outline-none placeholder:text-white/20"
-            />
-          </div>
+      <div id="success-ui" class="hidden">
+        <div style="font-size: 4rem; margin-bottom: 10px">🎉</div>
+        <h2 style="color: #ffd700; margin: 0">Chúc mừng năm mới</h2>
+        <div class="success-msg">
+          Chúc mừng năm mới Liên Chan<br />
+          Kim cương sẽ được gửi vào nik của bạn sau 24h<br />
+          <b>HAPPY NEW YEAR!</b>
         </div>
-        <button
-          onclick="confirmFinal()"
-          class="mt-8 w-full bg-yellow-400 text-red-900 font-black py-4 rounded-2xl hover:bg-yellow-300 shadow-lg uppercase transition-all"
-        >
-          Xác nhận & Kết thúc
-        </button>
-      </div>
-    </div>
-
-    <div
-      id="success-modal"
-      class="fixed inset-0 bg-red-950/98 hidden flex items-center justify-center z-[60] p-6"
-    >
-      <div
-        class="bg-gradient-to-b from-red-600 to-red-800 border-4 border-yellow-400 rounded-[40px] p-10 text-center max-w-sm w-full shadow-2xl"
-      >
-        <div class="text-6xl mb-4">🧧</div>
-        <h3 class="text-yellow-400 text-2xl font-black uppercase">
-          Gửi Thành Công!
-        </h3>
-        <p class="text-white/80 mt-4 text-sm leading-relaxed italic">
-          Lộc Xuân đang trên đường tới ví của bạn. Chúc bạn một năm 2026 rực rỡ!
-        </p>
-        <button
-          onclick="location.reload()"
-          class="mt-8 w-full bg-yellow-400 text-red-900 font-black py-4 rounded-2xl uppercase shadow-xl"
-        >
-          Hoàn tất
-        </button>
       </div>
     </div>
 
     <script>
-      const music = document.getElementById("tet-music");
-      const canvas = document.getElementById("fireworks");
-      const ctx = canvas.getContext("2d");
-
-      const wishes = [
-        "Chúc bạn năm mới: <br> <span class='text-2xl text-yellow-400 font-bold'>SỨC KHỎE NHƯ NGỰA CHIẾN!</span> 🐎",
-        "Công việc hanh thông, <br> <span class='text-2xl text-yellow-400 font-bold'>MÃ ĐÁO THÀNH CÔNG!</span> 📈",
-        "Tình duyên thắm thiết, <br> <span class='text-2xl text-yellow-400 font-bold'>HẠNH PHÚC VỮNG BỀN!</span> ❤️",
-        "Và bây giờ... <br> Hãy sẵn sàng để <br> <span class='text-2xl text-yellow-400 font-bold'>HÁI LỘC ĐẦU NĂM!</span> 👇",
+      // === CẤU HÌNH CƠ BẢN ===
+      const burstSounds = [
+        "Fireworks 2.mp3",
+        "Fireworks 4.mp3",
+        "Fireworks 7.mp3",
       ];
 
-      let currentStep = 0;
-      let finalPrize = "";
+      const canvas = document.getElementById("fireworks");
+      const ctx = canvas.getContext("2d");
+      const card = document.querySelector(".card");
 
-      // Resize Canvas cho pháo hoa
-      function resize() {
-        canvas.width = window.innerWidth;
-        canvas.height = window.innerHeight;
-      }
-      window.addEventListener("resize", resize);
-      resize();
-
-      // Tạo cánh hoa rơi
-      function createPetals() {
-        const container = document.getElementById("petals-container");
-        for (let i = 0; i < 35; i++) {
-          let petal = document.createElement("div");
-          petal.className = "petal";
-          petal.style.left = Math.random() * 100 + "vw";
-          petal.style.width = Math.random() * 15 + 10 + "px";
-          petal.style.height = petal.style.width;
-          petal.style.animationDuration = Math.random() * 3 + 4 + "s";
-          petal.style.animationDelay = Math.random() * 5 + "s";
-          container.appendChild(petal);
-        }
-      }
-      createPetals();
-
-      function toggleMusic() {
-        music.paused ? music.play() : music.pause();
-      }
-
-      function nextStep() {
-        if (currentStep === 0) music.play();
-        const contentArea = document.getElementById("content-area");
-        if (currentStep < wishes.length) {
-          contentArea.innerHTML = `<div class="animate-pop text-xl text-white font-medium italic px-4">${wishes[currentStep]}</div>`;
-          currentStep++;
-          document.getElementById("next-btn").innerText =
-            currentStep === wishes.length ? "NHẬN LÌ XÌ NGAY 🧧" : "TIẾP TỤC ➔";
-        } else {
-          showLixi();
-        }
-      }
-
-      function showLixi() {
-        const contentArea = document.getElementById("content-area");
-        document.getElementById("next-btn").classList.add("hidden");
-        contentArea.innerHTML = `
-                <div onclick="openLixi()" class="shake lixi-glow cursor-pointer">
-                    <div class="w-36 h-52 bg-gradient-to-b from-red-500 to-red-700 border-4 border-yellow-400 rounded-3xl shadow-2xl flex flex-col items-center justify-center relative overflow-hidden">
-                        <span class="text-6xl mb-2">🧧</span>
-                        <div class="bg-yellow-400 text-red-800 text-[10px] font-black py-1 px-4 rounded-full mb-4 uppercase">Lộc 2026</div>
-                        <div class="w-14 h-14 bg-yellow-400 rounded-full border-4 border-red-800 flex items-center justify-center font-black text-red-800 shadow-inner">MỞ</div>
-                    </div>
-                    <p class="mt-8 text-yellow-400 font-bold animate-pulse text-xs tracking-widest uppercase">Chạm để mở lộc!</p>
-                </div>`;
-      }
-
-      // Hiệu ứng Pháo hoa đơn giản bằng Canvas
+      let width, height;
+      let fireworks = [];
       let particles = [];
-      function createFirework() {
-        for (let i = 0; i < 100; i++) {
-          particles.push({
-            x: canvas.width / 2,
-            y: canvas.height / 2,
-            vx: (Math.random() - 0.5) * 10,
-            vy: (Math.random() - 0.5) * 10,
-            size: Math.random() * 3 + 1,
-            color: `hsl(${Math.random() * 360}, 100%, 50%)`,
-            life: 100,
-          });
+
+      const palettes = [
+        { h: 50, s: 100, l: 60 }, // Gold
+        { h: 0, s: 100, l: 60 }, // Red
+        { h: 180, s: 100, l: 50 }, // Cyan
+        { h: 300, s: 100, l: 50 }, // Purple
+      ];
+
+      function setSize() {
+        width = window.innerWidth;
+        height = window.innerHeight;
+        canvas.width = width;
+        canvas.height = height;
+      }
+      window.addEventListener("resize", setSize);
+      setSize();
+
+      function playSound() {
+        const randomIndex = Math.floor(Math.random() * burstSounds.length);
+        const audio = new Audio(burstSounds[randomIndex]);
+        audio.volume = 0.6;
+        audio.play().catch(() => {});
+      }
+
+      // === CLASS HẠT PHÁO ===
+      class Particle {
+        constructor(x, y, hue, type) {
+          this.x = x;
+          this.y = y;
+          this.hue = hue;
+          this.type = type;
+          const angle = Math.random() * Math.PI * 2;
+          const speed = Math.random() * 5 + 2;
+          this.vx = Math.cos(angle) * speed;
+          this.vy = Math.sin(angle) * speed;
+          this.friction = 0.96;
+          this.gravity = 0.15;
+          this.alpha = 1;
+          this.decay = Math.random() * 0.015 + 0.01;
+          this.brightness = Math.random() * 20 + 50;
+        }
+        update() {
+          this.vx *= this.friction;
+          this.vy *= this.friction;
+          this.vy += this.gravity;
+          this.x += this.vx;
+          this.y += this.vy;
+          this.alpha -= this.decay;
+          if (Math.random() < 0.1) this.brightness = 100;
+          else this.brightness = 50;
+        }
+        draw() {
+          ctx.globalAlpha = this.alpha;
+          ctx.fillStyle = `hsl(${this.hue}, 100%, ${this.brightness}%)`;
+          ctx.beginPath();
+          ctx.arc(
+            this.x,
+            this.y,
+            this.type === "heavy" ? 2.5 : 1.5,
+            0,
+            Math.PI * 2,
+          );
+          ctx.fill();
+          ctx.globalAlpha = 1;
         }
       }
 
-      function updateFireworks() {
-        ctx.clearRect(0, 0, canvas.width, canvas.height);
-        particles.forEach((p, i) => {
-          p.x += p.vx;
-          p.y += p.vy;
-          p.life--;
-          ctx.fillStyle = p.color;
+      // === CLASS QUẢ PHÁO ===
+      class Firework {
+        constructor(sx, sy, tx, ty, type = "normal") {
+          this.x = sx;
+          this.y = sy;
+          this.sx = sx;
+          this.sy = sy;
+          this.tx = tx;
+          this.ty = ty;
+          this.type = type;
+          this.distanceToTarget = Math.sqrt(
+            Math.pow(tx - sx, 2) + Math.pow(ty - sy, 2),
+          );
+          this.distanceTraveled = 0;
+          this.angle = Math.atan2(ty - sy, tx - sx);
+          this.speed = 12;
+          this.acceleration = 1.02;
+          const p = palettes[Math.floor(Math.random() * palettes.length)];
+          this.hue = p.h;
+        }
+        update() {
+          this.speed *= this.acceleration;
+          const vx = Math.cos(this.angle) * this.speed;
+          const vy = Math.sin(this.angle) * this.speed;
+          this.distanceTraveled = Math.sqrt(
+            Math.pow(this.x - this.sx, 2) + Math.pow(this.y - this.sy, 2),
+          );
+          if (this.distanceTraveled >= this.distanceToTarget) {
+            this.explode();
+            return false;
+          }
+          this.x += vx;
+          this.y += vy;
+          return true;
+        }
+        draw() {
           ctx.beginPath();
-          ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
-          ctx.fill();
-          if (p.life <= 0) particles.splice(i, 1);
-        });
-        requestAnimationFrame(updateFireworks);
+          ctx.moveTo(
+            this.x - Math.cos(this.angle) * 10,
+            this.y - Math.sin(this.angle) * 10,
+          );
+          ctx.lineTo(this.x, this.y);
+          ctx.strokeStyle = `hsl(${this.hue}, 100%, 50%)`;
+          ctx.lineWidth = 3;
+          ctx.stroke();
+        }
+        explode() {
+          playSound();
+          if (this.type === "heart") {
+            this.createHeartShape();
+          } else if (this.type === "ring") {
+            this.createRingShape();
+          } else {
+            this.createNormalShape();
+          }
+        }
+        createNormalShape() {
+          for (let i = 0; i < 80; i++) {
+            particles.push(new Particle(this.x, this.y, this.hue, "normal"));
+          }
+        }
+        createHeartShape() {
+          for (let i = 0; i < 60; i++) {
+            const t = (Math.PI * 2 * i) / 60;
+            const dx = 16 * Math.pow(Math.sin(t), 3);
+            const dy = -(
+              13 * Math.cos(t) -
+              5 * Math.cos(2 * t) -
+              2 * Math.cos(3 * t) -
+              Math.cos(4 * t)
+            );
+            const p = new Particle(this.x, this.y, 0, "heavy");
+            p.vx = dx * 0.15;
+            p.vy = dy * 0.15;
+            p.decay = 0.01;
+            particles.push(p);
+          }
+        }
+        createRingShape() {
+          for (let i = 0; i < 50; i++) {
+            const angle = (Math.PI * 2 * i) / 50;
+            const p = new Particle(this.x, this.y, this.hue, "normal");
+            const s = 4;
+            p.vx = Math.cos(angle) * s;
+            p.vy = Math.sin(angle) * s;
+            particles.push(p);
+          }
+        }
       }
-      updateFireworks();
 
-      function openLixi() {
-        createFirework(); // Kích hoạt pháo hoa
-        const prizes = [
-          "20.000đ",
-          "30.000đ",
-          "50.000đ",
-          "100.000đ",
-          "200.000đ",
-        ];
-        finalPrize = prizes[Math.floor(Math.random() * prizes.length)];
-        document.getElementById("reveal-money").innerText = finalPrize;
+      // === VÒNG LẶP ANIMATION ===
+      function loop() {
+        ctx.globalCompositeOperation = "destination-out";
+        ctx.fillStyle = "rgba(0, 0, 0, 0.2)";
+        ctx.fillRect(0, 0, width, height);
+        ctx.globalCompositeOperation = "lighter";
+        for (let i = fireworks.length - 1; i >= 0; i--) {
+          if (!fireworks[i].update()) fireworks.splice(i, 1);
+          else fireworks[i].draw();
+        }
+        for (let i = particles.length - 1; i >= 0; i--) {
+          particles[i].update();
+          if (particles[i].alpha <= 0) particles.splice(i, 1);
+          else particles[i].draw();
+        }
+        requestAnimationFrame(loop);
+      }
+      loop();
 
-        document.getElementById("play-screen").classList.add("hidden");
-        document.getElementById("prize-screen").classList.remove("hidden");
+      // === KỊCH BẢN ĐẠO DIỄN ===
+      let startTime = Date.now();
+      let mode = "intro";
+
+      function launchFirework(type = "normal", startX = null) {
+        const sx = startX !== null ? startX : Math.random() * width;
+        const sy = height;
+        const tx = Math.random() * (width * 0.6) + width * 0.2;
+        const ty = Math.random() * (height * 0.5) + 50;
+        fireworks.push(new Firework(sx, sy, tx, ty, type));
       }
 
-      function showForm() {
-        document.getElementById("prize-screen").classList.add("hidden");
-        document.getElementById("bank-form").classList.remove("hidden");
-      }
-
-      function confirmFinal() {
-        const acc = document.getElementById("bank-account").value;
-        if (acc.trim() === "") {
-          alert("Đừng quên nhập số tài khoản để nhận tiền bạn nhé!");
+      let scriptInterval = setInterval(() => {
+        let elapsed = Date.now() - startTime;
+        if (mode === "ui_active") {
+          if (Math.random() < 0.08) launchFirework("normal");
           return;
         }
-        document.getElementById("success-modal").classList.remove("hidden");
+        // Kịch bản 30 giây (Nhiều pháo hoa)
+        if (elapsed < 5000) {
+          if (Math.random() < 0.15) launchFirework("normal");
+        } else if (elapsed < 12000) {
+          if (Math.random() < 0.25) {
+            launchFirework("normal", width * 0.1);
+            setTimeout(() => launchFirework("normal", width * 0.9), 150);
+          }
+        } else if (elapsed < 20000) {
+          if (Math.random() < 0.15) launchFirework("heart");
+          if (Math.random() < 0.15) launchFirework("ring");
+        } else if (elapsed < 28000) {
+          if (Math.random() < 0.5) launchFirework("normal");
+        }
+      }, 100);
+
+      // === LOGIC GAME MỚI ===
+      setTimeout(() => {
+        mode = "ui_active";
+        card.classList.add("show");
+        startNewYearScript();
+      }, 30000);
+
+      // Bài thơ Lục Bát (Chia thành từng cặp câu)
+      const poem = [
+        "Chúc Liên Chan có một năm mới thật vui,",
+        "Luôn xinh đẹp và tỏa sáng như ánh nắng mai.",
+
+        "Đầu năm nhận lộc, quà tặng ngập tràn,",
+        "",
+      ];
+
+      async function startNewYearScript() {
+        setTimeout(() => {
+          document.getElementById("hpny-title").classList.add("animate");
+        }, 500);
+
+        const wishEl = document.getElementById("wish-text");
+
+        // Hàm hiển thị từng cặp câu
+        for (let i = 0; i < poem.length; i += 2) {
+          await typeLine(poem[i], wishEl); // Câu lục
+          wishEl.innerHTML += "<br>"; // Xuống dòng
+          await typeLine(poem[i + 1], wishEl); // Câu bát
+
+          // Dừng 2.5 giây để đọc
+          await new Promise((r) => setTimeout(r, 2500));
+
+          // Nếu chưa phải cặp cuối thì xóa để hiện cặp mới
+          if (i < poem.length - 2) {
+            wishEl.innerHTML = "";
+          }
+        }
+
+        // Hiện nút sau khi chạy hết thơ
+        document.getElementById("btn-get-lixi").classList.add("show-btn");
+      }
+
+      // Hàm chạy hiệu ứng gõ chữ
+      function typeLine(text, element) {
+        return new Promise((resolve) => {
+          let i = 0;
+          let typing = setInterval(() => {
+            element.innerHTML += text.charAt(i);
+            i++;
+            if (i >= text.length) {
+              clearInterval(typing);
+              resolve();
+            }
+          }, 50); // Tốc độ gõ
+        });
+      }
+
+      function goToLixi() {
+        document.getElementById("wish-ui").classList.add("hidden");
+        document.getElementById("lixi-ui").classList.remove("hidden");
+        document.getElementById("hpny-title").innerText = "🧧 LỘC XUÂN 🧧";
+      }
+
+      function openGift() {
+        // Mở lì xì
+        for (let k = 0; k < 12; k++) {
+          setTimeout(() => {
+            launchFirework(k % 2 === 0 ? "heart" : "ring");
+          }, k * 150);
+        }
+        document.getElementById("lixi-ui").classList.add("hidden");
+        document.getElementById("gift-ui").classList.remove("hidden");
+      }
+
+      function confirmGift() {
+        const uid = document.getElementById("uid").value;
+        if (!uid) {
+          alert("Bạn quên nhập ID kìa!");
+          return;
+        }
+
+        // Ẩn bảng nhập, hiện bảng chúc mừng
+        document.getElementById("gift-ui").classList.add("hidden");
+        document.getElementById("success-ui").classList.remove("hidden");
+        document.getElementById("hpny-title").innerText = "THÀNH CÔNG";
+
+        // Bắn pháo hoa ăn mừng lớn
+        for (let k = 0; k < 15; k++) {
+          setTimeout(() => {
+            launchFirework("normal");
+          }, k * 100);
+        }
       }
     </script>
   </body>

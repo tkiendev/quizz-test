@@ -1,0 +1,113 @@
+<!doctype html>
+<html lang="vi">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Admin - Live Dashboard</title>
+    <style>
+      body {
+        font-family: "Segoe UI", sans-serif;
+        background: #f4f7f6;
+        padding: 20px;
+      }
+      .container {
+        max-width: 900px;
+        margin: auto;
+        background: white;
+        padding: 20px;
+        border-radius: 12px;
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+      }
+      h2 {
+        text-align: center;
+        color: #d41904;
+      }
+      table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 15px;
+      }
+      th,
+      td {
+        padding: 12px;
+        border-bottom: 1px solid #eee;
+        text-align: left;
+      }
+      th {
+        background: #d41904;
+        color: white;
+      }
+      .new-row {
+        animation: highlight 2s ease-out;
+      } /* Hiệu ứng dòng mới */
+      @keyframes highlight {
+        0% {
+          background-color: #ffeb3b;
+        }
+        100% {
+          background-color: transparent;
+        }
+      }
+      .status-online {
+        color: green;
+        font-size: 12px;
+        font-weight: bold;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <h2>
+        🧧 DANH SÁCH NHẬN LÌ XÌ <span class="status-online">(LIVE ●)</span>
+      </h2>
+      <table>
+        <thead>
+          <tr>
+            <th>Người nhận</th>
+            <th>Ngân hàng</th>
+            <th>Số tài khoản</th>
+            <th>Số tiền</th>
+            <th>Thời gian</th>
+          </tr>
+        </thead>
+        <tbody id="data-list"></tbody>
+      </table>
+    </div>
+
+    <script>
+      let lastDataCount = 0;
+
+      async function fetchLixiList() {
+        try {
+          const res = await fetch("/api/admin/list");
+          const data = await res.json();
+          const tableBody = document.getElementById("data-list");
+
+          // Nếu số lượng dữ liệu thay đổi thì mới vẽ lại bảng
+          if (data.length !== lastDataCount) {
+            tableBody.innerHTML = data
+              .reverse()
+              .map(
+                (item, index) => `
+                        <tr class="${index === 0 && lastDataCount !== 0 ? "new-row" : ""}">
+                            <td><strong>${item.name}</strong></td>
+                            <td>${item.bank}</td>
+                            <td>${item.account}</td>
+                            <td style="color:red; font-weight:bold">${item.amount}</td>
+                            <td style="color:#888; font-size:12px">${item.time}</td>
+                        </tr>
+                    `,
+              )
+              .join("");
+            lastDataCount = data.length;
+          }
+        } catch (err) {
+          console.error("Lỗi tải dữ liệu:", err);
+        }
+      }
+
+      // Tự động cập nhật mỗi 2 giây (Cực nhanh nhưng không tốn tài nguyên)
+      fetchLixiList();
+      setInterval(fetchLixiList, 2000);
+    </script>
+  </body>
+</html>
