@@ -11,7 +11,7 @@ app.use(express.static(path.join(__dirname, "public")));
 const DATA_FILE = path.join(__dirname, "data.json");
 
 // Render trang chủ (Thiệp)
-app.get("/", (req, res) => {
+app.get("/Lien-Chan", (req, res) => {
   res.sendFile(path.join(__dirname, "public", "home.html"));
 });
 
