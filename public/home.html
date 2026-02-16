@@ -287,12 +287,16 @@
         </p>
         <div class="prize-text">THẺ VÔ CỰC<br />SONG NGƯ</div>
         <p style="font-size: 0.95rem; opacity: 0.8">
+          hãy cap màn hình lại và gửi cho tui để nhận lì xì nha
+        </p>
+        <p style="font-size: 0.95rem; opacity: 0.8; display: none">
           Nhập ID game để nhận quà về hộp thư
         </p>
         <input
           type="number"
           id="uid"
           placeholder="Nhập ID Game (VD: 12345678)"
+          style="display: none"
         />
         <button class="btn-confirm" onclick="confirmGift()">
           XÁC NHẬN NHẬN QUÀ
@@ -302,11 +306,6 @@
       <div id="success-ui" class="hidden">
         <div style="font-size: 4rem; margin-bottom: 10px">🎉</div>
         <h2 style="color: #ffd700; margin: 0">Chúc mừng năm mới</h2>
-        <div class="success-msg">
-          Chúc mừng năm mới Liên Chan<br />
-          Kim cương sẽ được gửi vào nik của bạn sau 24h<br />
-          <b>HAPPY NEW YEAR!</b>
-        </div>
       </div>
     </div>
 
@@ -610,11 +609,11 @@
       }
 
       function confirmGift() {
-        const uid = document.getElementById("uid").value;
-        if (!uid) {
-          alert("Bạn quên nhập ID kìa!");
-          return;
-        }
+        // const uid = document.getElementById("uid").value;
+        // if (!uid) {
+        //   alert("Bạn quên nhập ID kìa!");
+        //   return;
+        // }
 
         // Ẩn bảng nhập, hiện bảng chúc mừng
         document.getElementById("gift-ui").classList.add("hidden");
