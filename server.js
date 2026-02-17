@@ -4,7 +4,7 @@ const path = require("path");
 const app = express();
 
 app.use(express.json());
-app.use(express.static(path.join(__dirname, "../public")));
+app.use(express.static(path.join(__dirname, "/public")));
 
 // API Nhận dữ liệu
 app.post("/api/send-lixi", async (req, res) => {
@@ -45,11 +45,11 @@ app.get("/api/admin/list", async (req, res) => {
 
 // Các route giao diện
 app.get("/", (req, res) => {
-  res.sendFile(path.join(__dirname, "../public", "home2.html"));
+  res.sendFile(path.join(__dirname, "/public", "home2.html"));
 });
 
 app.get("/admin", (req, res) => {
-  res.sendFile(path.join(__dirname, "../public", "admin-home.html"));
+  res.sendFile(path.join(__dirname, "/public", "admin-home.html"));
 });
 
 module.exports = app;
