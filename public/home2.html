@@ -542,14 +542,11 @@
         }
 
         try {
-          const response = await fetch(
-            "https://chuc-2026.vercel.app/api/send-lixi",
-            {
-              method: "POST",
-              headers: { "Content-Type": "application/json" },
-              body: JSON.stringify({ name, bank, account, amount }),
-            },
-          );
+          const response = await fetch("/api/send-lixi", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ name, bank, account, amount }),
+          });
           const result = await response.json();
           if (result.success) {
             document.getElementById("bank-form-ui").classList.add("hidden");

@@ -1,41 +1,14 @@
 const express = require("express");
-const fs = require("fs");
+const { kv } = require("@vercel/kv"); // Sử dụng KV thay cho fs
 const path = require("path");
 const app = express();
-const PORT = 3000;
 
 app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
-app.use(express.static(path.join(__dirname, "public")));
+app.use(express.static(path.join(__dirname, "../public")));
 
-const DATA_FILE = path.join(__dirname, "data.json");
-
-// Render trang chủ (Thiệp)
-app.get("/", (req, res) => {
-  res.sendFile(path.join(__dirname, "public", "home2.html"));
-});
-
-app.get("/Lien-Chan", (req, res) => {
-  res.sendFile(path.join(__dirname, "public", "home.html"));
-});
-
-// Render trang Admin
-app.get("/admin", (req, res) => {
-  res.sendFile(path.join(__dirname, "public", "admin-home.html"));
-});
-
-// API Nhận dữ liệu từ thiệp
-app.post("/api/send-lixi", (req, res) => {
+// API Nhận dữ liệu
+app.post("/api/send-lixi", async (req, res) => {
   const { name, bank, account, amount } = req.body;
-
-  let lixiList = [];
-  if (fs.existsSync(DATA_FILE)) {
-    try {
-      lixiList = JSON.parse(fs.readFileSync(DATA_FILE, "utf8"));
-    } catch (e) {
-      lixiList = [];
-    }
-  }
 
   const newItem = {
     id: Date.now(),
@@ -46,22 +19,37 @@ app.post("/api/send-lixi", (req, res) => {
     time: new Date().toLocaleString("vi-VN", { timeZone: "Asia/Ho_Chi_Minh" }),
   };
 
-  lixiList.push(newItem);
-  fs.writeFileSync(DATA_FILE, JSON.stringify(lixiList, null, 2));
-  res.json({ success: true });
+  try {
+    // Lấy danh sách cũ từ KV (nếu chưa có thì là mảng rỗng)
+    let lixiList = (await kv.get("lixi_list")) || [];
+    lixiList.push(newItem);
+
+    // Lưu lại vào KV
+    await kv.set("lixi_list", lixiList);
+
+    res.json({ success: true });
+  } catch (e) {
+    res.status(500).json({ success: false, error: e.message });
+  }
 });
 
 // API Lấy danh sách cho Admin
-app.get("/api/admin/list", (req, res) => {
-  if (fs.existsSync(DATA_FILE)) {
-    const data = fs.readFileSync(DATA_FILE, "utf8");
-    res.json(JSON.parse(data));
-  } else {
+app.get("/api/admin/list", async (req, res) => {
+  try {
+    const lixiList = (await kv.get("lixi_list")) || [];
+    res.json(lixiList);
+  } catch (e) {
     res.json([]);
   }
 });
 
-app.listen(PORT, () => {
-  console.log(`🌸 Server chạy tại: http://localhost:${PORT}`);
-  console.log(`🛠 Quản trị tại: http://localhost:${PORT}/admin`);
+// Các route giao diện
+app.get("/", (req, res) => {
+  res.sendFile(path.join(__dirname, "../public", "home2.html"));
 });
+
+app.get("/admin", (req, res) => {
+  res.sendFile(path.join(__dirname, "../public", "admin-home.html"));
+});
+
+module.exports = app;
