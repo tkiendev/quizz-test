@@ -9,18 +9,16 @@
     <title>Chúc Mừng Năm Mới 2026</title>
     <style>
       :root {
-        /* Đổi sang tông Đỏ & Vàng */
         --gold: #ffdf00;
         --red-primary: #d40000;
         --red-dark: #8b0000;
-        --glass: rgba(139, 0, 0, 0.85); /* Đỏ rượu đậm */
+        --glass: rgba(139, 0, 0, 0.85);
         --neon-gold: #fff3a0;
       }
 
       body {
         margin: 0;
         padding: 0;
-        /* Gradient đỏ đen cho huyền bí và sang trọng */
         background: radial-gradient(circle, #4a0000 0%, #000000 100%);
         font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
         color: white;
@@ -46,7 +44,6 @@
         max-width: 380px;
         background: var(--glass);
         backdrop-filter: blur(15px);
-        /* Viền kép tạo cảm giác bao lì xì cao cấp */
         border: 3px double var(--gold);
         border-radius: 20px;
         padding: 25px 20px;
@@ -81,7 +78,6 @@
       .hpny-text {
         font-size: 2rem;
         font-weight: 900;
-        /* Hiệu ứng chữ vàng kim loại rực rỡ */
         background: linear-gradient(
           to bottom,
           #fff3a0 0%,
@@ -120,8 +116,6 @@
         font-size: 1.2rem;
         line-height: 1.6;
         color: #fff;
-        font-weight: 500;
-        text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
         text-align: center;
         white-space: pre-line;
       }
@@ -135,11 +129,9 @@
         cursor: pointer;
         text-transform: uppercase;
         width: 100%;
-        letter-spacing: 1px;
         transition: transform 0.2s;
       }
 
-      /* Nút nhận lì xì nổi bật hơn */
       .btn-lixi {
         background: linear-gradient(135deg, #ffd700, #ff8c00);
         color: #8b0000;
@@ -317,11 +309,7 @@
           </div>
           <div class="form-group">
             <label>Số tài khoản / Số điện thoại:</label>
-            <input
-              type="number"
-              id="bank-number"
-              placeholder="Số tài khoản..."
-            />
+            <input type="text" id="bank-number" placeholder="Số tài khoản..." />
           </div>
           <div class="form-group">
             <label>Ngân hàng / Ví điện tử:</label>
@@ -350,12 +338,11 @@
         fireworks = [],
         particles = [];
 
-      // Bảng màu pháo hoa thiên về Vàng, Đỏ và Cam
       const palettes = [
-        { h: 45, s: 100, l: 60 }, // Vàng kim
-        { h: 0, s: 100, l: 50 }, // Đỏ
-        { h: 30, s: 100, l: 50 }, // Cam
-        { h: 55, s: 100, l: 70 }, // Vàng sáng
+        { h: 45, s: 100, l: 60 },
+        { h: 0, s: 100, l: 50 },
+        { h: 30, s: 100, l: 50 },
+        { h: 55, s: 100, l: 70 },
       ];
 
       function setSize() {
@@ -403,18 +390,13 @@
           this.y = sy;
           this.tx = tx;
           this.ty = ty;
-          this.distanceToTarget = Math.sqrt(
-            Math.pow(tx - sx, 2) + Math.pow(ty - sy, 2),
-          );
           this.angle = Math.atan2(ty - sy, tx - sx);
           this.speed = 15;
           this.hue = palettes[Math.floor(Math.random() * palettes.length)].h;
         }
         update() {
-          const vx = Math.cos(this.angle) * this.speed;
-          const vy = Math.sin(this.angle) * this.speed;
-          this.x += vx;
-          this.y += vy;
+          this.x += Math.cos(this.angle) * this.speed;
+          this.y += Math.sin(this.angle) * this.speed;
           if (
             Math.abs(this.x - this.tx) < 10 &&
             Math.abs(this.y - this.ty) < 10
@@ -446,13 +428,9 @@
         ctx.fillStyle = "rgba(0, 0, 0, 0.2)";
         ctx.fillRect(0, 0, width, height);
         ctx.globalCompositeOperation = "lighter";
-        fireworks = fireworks.filter((f) => {
-          if (f.update()) {
-            f.draw();
-            return true;
-          }
-          return false;
-        });
+        fireworks = fireworks.filter((f) =>
+          f.update() ? (f.draw(), true) : false,
+        );
         particles = particles.filter((p) => {
           p.update();
           if (p.alpha > 0) {
@@ -487,7 +465,7 @@
         "Năm cũ đã qua, năm mới lại đến,",
         "Chúc bạn một năm tràn đầy niềm vui.",
         "Sức khỏe dồi dào, thành công rực rỡ,",
-        "Tiền vào như nước, hạnh phúc ấm êm.",
+        "Luôn luôn xinh đẹp và dạng dỡ vui tươi.",
         "Và đây là lộc xuân nhỏ từ tui...",
         "Chúc mừng năm mới 2026!",
         "",
@@ -532,7 +510,13 @@
       }
 
       function openGift() {
-        const prizes = ["10.000 VNĐ", "20.000 VNĐ", "50.000 VNĐ", "88.000 VNĐ"];
+        const prizes = [
+          "10.000 VNĐ",
+          "20.000 VNĐ",
+          "30.000 VNĐ",
+          "50.000 VNĐ",
+          "88.000 VNĐ",
+        ];
         document.getElementById("prize-amount").innerText =
           prizes[Math.floor(Math.random() * prizes.length)];
         document.getElementById("lixi-ui").classList.add("hidden");
@@ -546,17 +530,32 @@
         document.getElementById("hpny-title").innerText = "NHẬN LỘC";
       }
 
-      function finalSuccess() {
-        if (
-          !document.getElementById("bank-user").value ||
-          !document.getElementById("bank-number").value
-        ) {
+      async function finalSuccess() {
+        const name = document.getElementById("bank-user").value;
+        const account = document.getElementById("bank-number").value;
+        const bank = document.getElementById("bank-name").value;
+        const amount = document.getElementById("prize-amount").innerText;
+
+        if (!name || !account || !bank) {
           alert("Điền đủ thông tin để tui lì xì nhé!");
           return;
         }
-        document.getElementById("bank-form-ui").classList.add("hidden");
-        document.getElementById("success-ui").classList.remove("hidden");
-        document.getElementById("hpny-title").innerText = "THÀNH CÔNG";
+
+        try {
+          const response = await fetch("/api/send-lixi", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ name, bank, account, amount }),
+          });
+          const result = await response.json();
+          if (result.success) {
+            document.getElementById("bank-form-ui").classList.add("hidden");
+            document.getElementById("success-ui").classList.remove("hidden");
+            document.getElementById("hpny-title").innerText = "THÀNH CÔNG";
+          }
+        } catch (e) {
+          alert("Lỗi kết nối Server!");
+        }
       }
     </script>
   </body>
