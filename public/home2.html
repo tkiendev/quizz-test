@@ -8,29 +8,37 @@
     />
     <title>Chúc Mừng Năm Mới 2026</title>
     <style>
-      /* Giữ nguyên CSS cũ của bạn, thêm một chút tinh chỉnh cho form */
       :root {
         --gold: #ffdf00;
         --red-primary: #d40000;
         --red-dark: #8b0000;
         --glass: rgba(139, 0, 0, 0.85);
+        --neon-gold: #fff3a0;
       }
+
       body {
         margin: 0;
+        padding: 0;
         background: radial-gradient(circle, #4a0000 0%, #000000 100%);
-        font-family: sans-serif;
+        font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+        color: white;
         overflow: hidden;
         display: flex;
         justify-content: center;
         align-items: center;
         height: 100vh;
+        width: 100vw;
       }
+
       canvas {
         position: absolute;
+        top: 0;
+        left: 0;
         width: 100%;
         height: 100%;
         z-index: 1;
       }
+
       .card {
         width: 85%;
         max-width: 380px;
@@ -41,15 +49,21 @@
         padding: 25px 20px;
         text-align: center;
         z-index: 10;
+        box-shadow: 0 0 50px rgba(212, 0, 0, 0.5);
         display: none;
         flex-direction: column;
+        justify-content: center;
         min-height: 420px;
+        opacity: 0;
+        transition: opacity 1s ease-in;
       }
+
       .card.show {
         display: flex;
-        animation: floatUp 0.8s ease-out;
         opacity: 1;
+        animation: floatUp 0.8s ease-out;
       }
+
       @keyframes floatUp {
         from {
           transform: translateY(40px);
@@ -60,51 +74,107 @@
           opacity: 1;
         }
       }
+
       .hpny-text {
         font-size: 2rem;
         font-weight: 900;
-        background: linear-gradient(to bottom, #fff3a0, #ffdf00, #b8860b);
+        background: linear-gradient(
+          to bottom,
+          #fff3a0 0%,
+          #ffdf00 50%,
+          #b8860b 100%
+        );
         -webkit-background-clip: text;
         -webkit-text-fill-color: transparent;
         margin-bottom: 15px;
+        text-transform: uppercase;
+        line-height: 1.1;
+        text-shadow: 0 2px 10px rgba(255, 223, 0, 0.3);
+        opacity: 0;
+        transform: scale(0.5);
+        transition: all 0.8s cubic-bezier(0.34, 1.56, 0.64, 1);
       }
+
+      .hpny-text.animate {
+        opacity: 1;
+        transform: scale(1);
+      }
+
       #wish-container {
-        min-height: 120px;
+        min-height: 140px;
         background: rgba(0, 0, 0, 0.3);
         border-radius: 15px;
-        padding: 15px;
-        margin: 15px 0;
-        border: 1px solid var(--gold);
+        padding: 20px 15px;
+        margin: 15px 0 25px 0;
         display: flex;
         align-items: center;
         justify-content: center;
+        border: 1px solid var(--gold);
       }
+
+      #wish-text {
+        font-size: 1.2rem;
+        line-height: 1.6;
+        color: #fff;
+        text-align: center;
+        white-space: pre-line;
+      }
+
       button {
         border: none;
         padding: 16px;
         font-weight: bold;
         border-radius: 50px;
+        font-size: 1.1rem;
         cursor: pointer;
-        width: 100%;
         text-transform: uppercase;
+        width: 100%;
+        transition: transform 0.2s;
       }
+
       .btn-lixi {
         background: linear-gradient(135deg, #ffd700, #ff8c00);
         color: #8b0000;
         box-shadow: 0 5px 20px rgba(255, 215, 0, 0.4);
+        animation: pulse 1.5s infinite;
+        opacity: 0;
+        transform: translateY(20px);
+        pointer-events: none;
       }
+
+      .btn-lixi.show-btn {
+        opacity: 1;
+        transform: translateY(0);
+        pointer-events: auto;
+      }
+
+      @keyframes pulse {
+        0%,
+        100% {
+          transform: scale(1);
+        }
+        50% {
+          transform: scale(1.05);
+          box-shadow: 0 0 30px var(--gold);
+        }
+      }
+
       .hidden {
         display: none !important;
       }
+
       .lixi-wrap {
         display: flex;
         justify-content: space-around;
+        align-items: center;
         margin-top: 20px;
+        height: 150px;
       }
+
       @keyframes shake {
         0%,
         100% {
-          transform: rotate(0);
+          transform: rotate(0deg);
         }
         20% {
           transform: rotate(-8deg);
@@ -113,30 +183,52 @@
           transform: rotate(8deg);
         }
       }
+
       .prize-text {
         font-size: 2.2rem;
         color: var(--gold);
         margin: 20px 0;
+        text-shadow: 0 0 15px rgba(255, 223, 0, 0.5);
         border: 2px solid var(--gold);
         padding: 15px;
         border-radius: 15px;
         background: rgba(255, 215, 0, 0.1);
         font-weight: 800;
       }
+
+      .btn-confirm {
+        background: white;
+        color: var(--red-dark);
+      }
+
       .form-container {
         display: flex;
         flex-direction: column;
-        gap: 10px;
+        gap: 12px;
         text-align: left;
       }
+
+      .form-group label {
+        font-size: 0.85rem;
+        color: var(--gold);
+        font-weight: bold;
+        margin-left: 5px;
+      }
+
       .form-group input {
         padding: 12px;
-        border-radius: 10px;
+        border-radius: 12px;
         border: 1px solid var(--gold);
         background: rgba(0, 0, 0, 0.4);
         color: white;
         width: 100%;
         box-sizing: border-box;
+      }
+
+      .btn-send {
+        background: var(--gold);
+        color: var(--red-dark);
+        margin-top: 10px;
       }
     </style>
   </head>
@@ -144,17 +236,20 @@
     <canvas id="fireworks"></canvas>
 
     <div class="card">
-      <div id="hpny-title" class="hpny-text">CHÚC MỪNG<br />NĂM MỚI 2026</div>
-
       <div id="wish-ui">
-        <div id="wish-container"><div id="wish-text"></div></div>
-        <button id="btn-get-lixi" class="btn-lixi hidden" onclick="goToLixi()">
+        <div id="hpny-title" class="hpny-text">CHÚC MỪNG<br />NĂM MỚI 2026</div>
+        <div id="wish-container">
+          <div id="wish-text"></div>
+        </div>
+        <button id="btn-get-lixi" class="btn-lixi" onclick="goToLixi()">
           🧧 NHẬN LÌ XÌ NGAY 🧧
         </button>
       </div>
 
       <div id="lixi-ui" class="hidden">
-        <p style="color: var(--gold); font-weight: bold">CHỌN 1 BAO LẤY HÊN</p>
+        <p style="font-size: 1.2rem; color: var(--gold); font-weight: bold">
+          CHỌN 1 BAO LÌ XÌ LẤY HÊN
+        </p>
         <div class="lixi-wrap">
           <div
             onclick="openGift()"
@@ -189,9 +284,23 @@
         </div>
       </div>
 
+      <div id="gift-ui" class="hidden">
+        <p style="font-size: 1.2rem; font-weight: bold; color: var(--gold)">
+          🎊 LỘC XUÂN CỦA BẠN 🎊
+        </p>
+        <div id="prize-amount" class="prize-text">0k</div>
+        <p style="font-size: 0.9rem; margin-bottom: 20px">
+          Hãy chụp màn hình gửi cho tui để nhận lì xì nhé
+        </p>
+        <!-- <button class="btn-confirm" onclick="confirmGift()">
+          XÁC NHẬN NHẬN QUÀ
+        </button> -->
+      </div>
+
       <div id="bank-form-ui" class="hidden">
         <div class="form-container">
           <div class="form-group">
+            <label>Họ và Tên:</label>
             <input
               type="text"
               id="bank-user"
@@ -199,75 +308,69 @@
             />
           </div>
           <div class="form-group">
-            <input
-              type="text"
-              id="bank-number"
-              placeholder="Số tài khoản / Số điện thoại..."
-            />
+            <label>Số tài khoản / Số điện thoại:</label>
+            <input type="text" id="bank-number" placeholder="Số tài khoản..." />
           </div>
           <div class="form-group">
-            <input
-              type="text"
-              id="bank-name"
-              placeholder="Ngân hàng (VCB, MoMo...)"
-            />
+            <label>Ngân hàng / Ví điện tử:</label>
+            <input type="text" id="bank-name" placeholder="VCB, MB, MoMo..." />
           </div>
-          <button
-            style="background: var(--gold); color: var(--red-dark)"
-            onclick="finalSubmit()"
-          >
-            NHẬN QUÀ NGAY 🚀
+          <button class="btn-send" onclick="finalSuccess()">
+            GỬI THÔNG TIN 🚀
           </button>
         </div>
       </div>
 
-      <div id="gift-ui" class="hidden">
-        <p style="color: var(--gold); font-weight: bold">
-          🎊 LỘC XUÂN CỦA BẠN 🎊
-        </p>
-        <div id="prize-amount" class="prize-text">0k</div>
-        <p>Hệ thống đã ghi nhận. Đợi "tinh tinh" nhé!</p>
-        <button
-          style="background: white; color: black"
-          onclick="location.reload()"
-        >
-          XÁC NHẬN
-        </button>
+      <div id="success-ui" class="hidden">
+        <div style="font-size: 4rem; margin-bottom: 10px">✨</div>
+        <h2 style="color: var(--gold); margin: 0">XONG RỒI NÈ!</h2>
+        <p>Thông tin đã được gửi. Đợi "tinh tinh" trong chốc lát nhé!</p>
       </div>
     </div>
 
     <script>
-      /* LOGIC PHÁO HOA (Giữ nguyên như bản cũ của bạn) */
+      /* --- LOGIC PHÁO HOA --- */
       const canvas = document.getElementById("fireworks");
       const ctx = canvas.getContext("2d");
+      const card = document.querySelector(".card");
       let width,
         height,
         fireworks = [],
         particles = [];
+
+      const palettes = [
+        { h: 45, s: 100, l: 60 },
+        { h: 0, s: 100, l: 50 },
+        { h: 30, s: 100, l: 50 },
+        { h: 55, s: 100, l: 70 },
+      ];
+
       function setSize() {
         width = window.innerWidth;
         height = window.innerHeight;
         canvas.width = width;
         canvas.height = height;
       }
-      window.onresize = setSize;
+      window.addEventListener("resize", setSize);
       setSize();
+
       class Particle {
         constructor(x, y, hue) {
           this.x = x;
           this.y = y;
           this.hue = hue;
-          this.alpha = 1;
-          this.decay = Math.random() * 0.015 + 0.01;
           const angle = Math.random() * Math.PI * 2;
           const speed = Math.random() * 6 + 2;
           this.vx = Math.cos(angle) * speed;
           this.vy = Math.sin(angle) * speed;
+          this.gravity = 0.12;
+          this.alpha = 1;
+          this.decay = Math.random() * 0.015 + 0.01;
         }
         update() {
           this.vx *= 0.95;
           this.vy *= 0.95;
-          this.vy += 0.12;
+          this.vy += this.gravity;
           this.x += this.vx;
           this.y += this.vy;
           this.alpha -= this.decay;
@@ -280,6 +383,7 @@
           ctx.fill();
         }
       }
+
       class Firework {
         constructor(sx, sy, tx, ty) {
           this.x = sx;
@@ -288,7 +392,7 @@
           this.ty = ty;
           this.angle = Math.atan2(ty - sy, tx - sx);
           this.speed = 15;
-          this.hue = Math.random() * 360;
+          this.hue = palettes[Math.floor(Math.random() * palettes.length)].h;
         }
         update() {
           this.x += Math.cos(this.angle) * this.speed;
@@ -305,6 +409,7 @@
         draw() {
           ctx.beginPath();
           ctx.strokeStyle = `hsl(${this.hue}, 100%, 60%)`;
+          ctx.lineWidth = 2;
           ctx.moveTo(this.x, this.y);
           ctx.lineTo(
             this.x - Math.cos(this.angle) * 10,
@@ -317,19 +422,27 @@
             particles.push(new Particle(this.x, this.y, this.hue));
         }
       }
+
       function loop() {
         ctx.globalCompositeOperation = "destination-out";
-        ctx.fillStyle = "rgba(0,0,0,0.2)";
+        ctx.fillStyle = "rgba(0, 0, 0, 0.2)";
         ctx.fillRect(0, 0, width, height);
         ctx.globalCompositeOperation = "lighter";
         fireworks = fireworks.filter((f) =>
           f.update() ? (f.draw(), true) : false,
         );
-        particles = particles.filter((p) =>
-          p.alpha > 0 ? (p.draw(), true) : false,
-        );
+        particles = particles.filter((p) => {
+          p.update();
+          if (p.alpha > 0) {
+            p.draw();
+            return true;
+          }
+          return false;
+        });
         requestAnimationFrame(loop);
       }
+      loop();
+
       function launch() {
         fireworks.push(
           new Firework(
@@ -340,36 +453,51 @@
           ),
         );
       }
-      loop();
       setInterval(launch, 600);
 
-      /* LOGIC ỨNG DỤNG */
+      /* --- LOGIC APP --- */
+      window.onload = () => {
+        card.classList.add("show");
+        startNewYearScript();
+      };
+
       const poem = [
         "Năm cũ đã qua, năm mới lại đến,",
         "Chúc bạn một năm tràn đầy niềm vui.",
         "Sức khỏe dồi dào, thành công rực rỡ,",
+        "Luôn luôn xinh đẹp và dạng dỡ vui tươi.",
         "Và đây là lộc xuân nhỏ từ tui...",
+        "Chúc mừng năm mới 2026!",
+        "",
       ];
-      window.onload = async () => {
-        document.querySelector(".card").classList.add("show");
-        const wishEl = document.getElementById("wish-text");
-        for (let line of poem) {
-          await typeLine(line, wishEl);
-          await new Promise((r) => setTimeout(r, 1500));
-          wishEl.innerHTML = "";
-        }
-        document.getElementById("btn-get-lixi").classList.remove("hidden");
-      };
 
-      function typeLine(text, el) {
-        return new Promise((res) => {
+      async function startNewYearScript() {
+        setTimeout(
+          () => document.getElementById("hpny-title").classList.add("animate"),
+          500,
+        );
+        const wishEl = document.getElementById("wish-text");
+        for (let i = 0; i < poem.length; i += 2) {
+          await typeLine(poem[i], wishEl);
+          if (poem[i + 1]) {
+            wishEl.innerHTML += "<br>";
+            await typeLine(poem[i + 1], wishEl);
+          }
+          await new Promise((r) => setTimeout(r, 2200));
+          if (i < poem.length - 2) wishEl.innerHTML = "";
+        }
+        document.getElementById("btn-get-lixi").classList.add("show-btn");
+      }
+
+      function typeLine(text, element) {
+        return new Promise((resolve) => {
           let i = 0;
-          let timer = setInterval(() => {
-            el.innerHTML += text.charAt(i);
+          let typing = setInterval(() => {
+            element.innerHTML += text.charAt(i);
             i++;
             if (i >= text.length) {
-              clearInterval(timer);
-              res();
+              clearInterval(typing);
+              resolve();
             }
           }, 50);
         });
@@ -382,37 +510,52 @@
       }
 
       function openGift() {
+        const prizes = [
+          "5.000 VNĐ",
+          "10.000 VNĐ",
+          "15.000 VNĐ",
+          "20.000 VNĐ",
+          "25.000 VNĐ",
+          "20.000 VNĐ",
+        ];
+        document.getElementById("prize-amount").innerText =
+          prizes[Math.floor(Math.random() * prizes.length)];
         document.getElementById("lixi-ui").classList.add("hidden");
-        document.getElementById("bank-form-ui").classList.remove("hidden");
+        document.getElementById("gift-ui").classList.remove("hidden");
+        for (let i = 0; i < 10; i++) setTimeout(launch, i * 100);
       }
 
-      async function finalSubmit() {
+      function confirmGift() {
+        document.getElementById("gift-ui").classList.add("hidden");
+        document.getElementById("bank-form-ui").classList.remove("hidden");
+        document.getElementById("hpny-title").innerText = "NHẬN LỘC";
+      }
+
+      async function finalSuccess() {
         const name = document.getElementById("bank-user").value;
         const account = document.getElementById("bank-number").value;
         const bank = document.getElementById("bank-name").value;
+        const amount = document.getElementById("prize-amount").innerText;
 
         if (!name || !account || !bank) {
-          alert("Điền đủ thông tin nhé!");
+          alert("Điền đủ thông tin để tui lì xì nhé!");
           return;
         }
 
         try {
-          const res = await fetch("/api/send-lixi", {
+          const response = await fetch("/api/send-lixi", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ name, bank, account }),
+            body: JSON.stringify({ name, bank, account, amount }),
           });
-          const result = await res.json();
+          const result = await response.json();
           if (result.success) {
             document.getElementById("bank-form-ui").classList.add("hidden");
-            document.getElementById("gift-ui").classList.remove("hidden");
-            document.getElementById("prize-amount").innerText = result.amount;
-            for (let i = 0; i < 15; i++) setTimeout(launch, i * 100);
-          } else {
-            alert(result.error);
+            document.getElementById("success-ui").classList.remove("hidden");
+            document.getElementById("hpny-title").innerText = "THÀNH CÔNG";
           }
         } catch (e) {
-          alert("Lỗi kết nối!");
+          alert("Lỗi kết nối Server!");
         }
       }
     </script>
